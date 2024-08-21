@@ -1,0 +1,59 @@
+server:
+  host: localhost
+  port: 8080
+  level: debug # debug | release | test
+  upload_mode: local # local | oss
+
+mysql:
+  master:
+    host: 127.0.0.1
+    port: 3307
+    database: gin_mall
+    username: root
+    password:
+  slave:
+    host: 127.0.0.1
+    port: 3308
+    database: gin_mall
+    username: root
+    password:
+
+redis:
+  host: 127.0.0.1
+  port: 6379
+  db: 0
+  password:
+
+log:
+  level: info
+  dir: ./storage/logs
+  filename: gin-mall.log
+  format: console # 写入格式 json | console
+  show_line: true # 是否显示调用行
+  max_backups: 3 # 旧文件的最大个数
+  max_size: 500 # 日志文件最大大小（MB）
+  max_age: 7 # 旧文件的最大保留天数
+  compress: true # 是否压缩
+
+es: # v8.15.0 https
+  host: localhost
+  port: 9200
+  username: elastic
+  password:
+  sniffer: false
+  index: log
+
+image:
+  avatar_dir: storage/avatar
+
+oss:
+  endpoint:
+  bucket:
+  access_key_id:
+  access_key_secret:
+
+jwt:
+  secret: gin-mall
+  issuer: gin-mall
+  access_token_ttl: 7 # day
+  refresh_token_ttl: 30 # day

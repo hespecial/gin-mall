@@ -1,0 +1,38 @@
+package e
+
+const (
+	IsLogicError       = true
+	NotLogicError      = false
+	BusinessLogicError = "业务逻辑错误"
+)
+
+var msg = map[Code]string{
+	Success:       "success",
+	InvalidParams: "参数错误",
+	UnknownError:  "未知错误",
+
+	ErrorUserExists:        "用户已存在",
+	ErrorEncryptPassword:   "密码加密错误",
+	ErrorEncryptMoney:      "金额加密错误",
+	ErrorCreateUser:        "创建用户错误",
+	ErrorAccountInvalid:    "用户名或密码错误",
+	ErrorGetUserByID:       "根据id获取用户失败",
+	ErrorUpdateUser:        "更新用户失败",
+	ErrorIncorrectPassword: "密码错误",
+	ErrorUploadAvatar:      "头像上传错误",
+
+	ErrorGenerateToken: "token生成错误",
+	ErrorContextValue:  "上下文值传递错误",
+
+	ErrorUploadFile:     "文件上传错误",
+	ErrorFileError:      "文件错误",
+	ErrorOSSUploadError: "OSS文件上传错误",
+	ErrorFileType:       "文件类型错误",
+}
+
+func (c Code) Msg() string {
+	if v, ok := msg[c]; ok {
+		return v
+	}
+	return msg[UnknownError]
+}
