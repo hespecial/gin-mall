@@ -6,6 +6,10 @@ import (
 	"time"
 )
 
+var (
+	TokenExpiredError = errors.New("token is expired")
+)
+
 type jwtUser interface {
 	GetUserID() uint
 	GetUsername() string
@@ -69,13 +73,13 @@ func GenerateToken(user jwtUser) (accessToken, refreshToken string, err error) {
 
 func ParseToken(token string) (*Claims, error) {
 	tokenClaims, err := jwt.ParseWithClaims(token, &Claims{}, keyFunc)
-	if err != nil {
+	if err != nil && !errors.Is(err, jwt.ErrTokenExpired) {
 		return nil, err
 	}
 
 	claims, ok := tokenClaims.Claims.(*Claims)
 	if !ok || !tokenClaims.Valid {
-		return nil, errors.New("invalid token")
+		return nil, TokenExpiredError
 	}
 
 	return claims, nil
@@ -107,4 +111,37 @@ func ParseRefreshToken(token string) (string, string, error) {
 		username: refreshClaims.Username,
 	}
 	return GenerateToken(ju)
+}
+
+type EmailClaims struct {
+	Email string
+	jwt.RegisteredClaims
+}
+
+func GenerateEmailToken(email string) (string, error) {
+	token, err := jwt.NewWithClaims(jwt.SigningMethodHS256, &EmailClaims{
+		Email: email,
+		RegisteredClaims: jwt.RegisteredClaims{
+			Issuer:    conf.Issuer,
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(5 * time.Minute)),
+		},
+	}).SignedString(conf.Secret)
+	if err != nil {
+		return "", err
+	}
+	return token, nil
+}
+
+func ParseEmailToken(token string) (*EmailClaims, error) {
+	tokenClaims, err := jwt.ParseWithClaims(token, &EmailClaims{}, keyFunc)
+	if err != nil && !errors.Is(err, jwt.ErrTokenExpired) {
+		return nil, err
+	}
+
+	claims, ok := tokenClaims.Claims.(*EmailClaims)
+	if !ok || !tokenClaims.Valid {
+		return nil, TokenExpiredError
+	}
+
+	return claims, nil
 }

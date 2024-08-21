@@ -1,16 +1,19 @@
 package service
 
 import (
+	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/hespecial/gin-mall/global"
 	"github.com/hespecial/gin-mall/internal/api/request"
 	"github.com/hespecial/gin-mall/internal/api/response"
+	"github.com/hespecial/gin-mall/internal/common/constant"
 	"github.com/hespecial/gin-mall/internal/common/e"
-	"github.com/hespecial/gin-mall/internal/common/enum"
 	"github.com/hespecial/gin-mall/internal/model"
 	"github.com/hespecial/gin-mall/internal/repository/dao"
+	"github.com/hespecial/gin-mall/pkg/email"
 	"github.com/hespecial/gin-mall/pkg/files"
+	"github.com/hespecial/gin-mall/pkg/jwt"
 	"github.com/hespecial/gin-mall/pkg/oss"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
@@ -24,7 +27,7 @@ type userService struct{}
 var UserService *userService
 
 func getUserID(c *gin.Context) (uint, bool) {
-	userID, exist := c.Get(enum.UserID)
+	userID, exist := c.Get(constant.UserID)
 	if !exist {
 		global.Log.Error("jwt中间件上下文值传递错误")
 		return 0, false
@@ -33,7 +36,7 @@ func getUserID(c *gin.Context) (uint, bool) {
 }
 
 func getUsername(c *gin.Context) (string, bool) {
-	username, exist := c.Get(enum.Username)
+	username, exist := c.Get(constant.Username)
 	if !exist {
 		global.Log.Error("jwt中间件上下文值传递错误")
 		return "", false
@@ -43,13 +46,13 @@ func getUsername(c *gin.Context) (string, bool) {
 
 func getAvatarURL(updateMode string, filename string) (url string) {
 	switch updateMode {
-	case enum.UploadModeLocal:
+	case constant.UploadModeLocal:
 		url = fmt.Sprintf("http://%s:%d/%s",
 			global.Config.Server.Host,
 			global.Config.Server.Port,
 			global.Config.Image.AvatarDir,
 		)
-	case enum.UploadModeOSS:
+	case constant.UploadModeOSS:
 		url = fmt.Sprintf("https://%s.%s",
 			global.Config.Oss.Bucket,
 			global.Config.Oss.Endpoint,
@@ -95,7 +98,6 @@ func (*userService) UserInfoUpdate(c *gin.Context, req *request.UserInfoUpdateRe
 	userForUpdate := &model.User{
 		Model:    gorm.Model{ID: userID},
 		Nickname: req.Nickname,
-		Email:    req.Email,
 	}
 
 	// 更新用户信息
@@ -161,7 +163,7 @@ func (*userService) UserPasswordChange(c *gin.Context, req *request.UserPassword
 
 func (*userService) UploadAvatar(c *gin.Context, file *multipart.FileHeader) (*response.UploadAvatarResp, e.Code, bool) {
 	// 检查文件类型
-	allowedTypes := []string{enum.AvatarTypeJPEG, enum.AvatarTypePNG}
+	allowedTypes := []string{constant.AvatarTypeJPEG, constant.AvatarTypePNG}
 	if !files.IsAllowedFileType(file, allowedTypes) {
 		return nil, e.ErrorFileType, e.NotLogicError
 	}
@@ -183,7 +185,7 @@ func (*userService) UploadAvatar(c *gin.Context, file *multipart.FileHeader) (*r
 	filename := strings.Join([]string{username, ext}, "")
 	uploadMode := global.Config.Server.UploadMode
 	url := getAvatarURL(uploadMode, filename)
-	if uploadMode == enum.UploadModeLocal {
+	if uploadMode == constant.UploadModeLocal {
 		dst := strings.Join([]string{".", global.Config.Image.AvatarDir, filename}, "/")
 		err := c.SaveUploadedFile(file, dst)
 		if err != nil {
@@ -216,6 +218,72 @@ func (*userService) UploadAvatar(c *gin.Context, file *multipart.FileHeader) (*r
 
 	// 响应信息
 	resp := &response.UploadAvatarResp{}
+
+	return resp, e.Success, e.NotLogicError
+}
+
+func getEmailValidAddr(emailToken string) string {
+	validAddr := fmt.Sprintf("http://%s:%d/%s?%s=%s",
+		global.Config.Server.Host,
+		global.Config.Server.Port,
+		constant.ValidEmailAddress,
+		constant.EmailTokenKey,
+		emailToken,
+	)
+	return validAddr
+}
+
+func (*userService) BindEmail(_ *gin.Context, req *request.BindEmailReq) (*response.BindEmailResp, e.Code, bool) {
+	emailToken, err := jwt.GenerateEmailToken(req.Email)
+	if err != nil {
+		global.Log.Error("生成email token错误", zap.Error(err))
+		return nil, e.ErrorGenerateToken, e.IsLogicError
+	}
+
+	validAddr := getEmailValidAddr(emailToken)
+	sender := email.NewSender()
+	body := fmt.Sprintf(constant.BindEmailBody, validAddr)
+	err = sender.SendEmail(req.Email, constant.EmailSubject, body)
+	if err != nil {
+		global.Log.Error("发送邮件错误", zap.Error(err))
+		return nil, e.ErrorSendEmail, e.IsLogicError
+	}
+
+	resp := &response.BindEmailResp{}
+
+	return resp, e.Success, e.NotLogicError
+}
+
+func (*userService) ValidEmail(c *gin.Context, req *request.ValidEmailReq) (*response.ValidEmailResp, e.Code, bool) {
+	// 从context中获取UserID
+	userID, ok := getUserID(c)
+	if !ok {
+		return nil, e.ErrorContextValue, e.IsLogicError
+	}
+
+	claims, err := jwt.ParseEmailToken(req.Token)
+	if err != nil {
+		if errors.Is(err, jwt.TokenExpiredError) {
+			global.Log.Info("email token已过期", zap.Error(err))
+			return nil, e.ErrorEmailLinkExpire, e.NotLogicError
+		} else {
+			global.Log.Error("解析email token错误", zap.Error(err))
+			return nil, e.ErrorParseToken, e.IsLogicError
+		}
+	}
+
+	userForUpdate := &model.User{
+		Model: gorm.Model{ID: userID},
+		Email: claims.Email,
+	}
+
+	err = dao.UpdateUser(userForUpdate)
+	if err != nil {
+		global.Log.Error("更新邮箱错误", zap.Error(err))
+		return nil, e.ErrorUpdateEmail, e.IsLogicError
+	}
+
+	resp := &response.ValidEmailResp{}
 
 	return resp, e.Success, e.NotLogicError
 }

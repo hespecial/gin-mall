@@ -14,3 +14,9 @@ type ShowUserInfoResp struct {
 }
 
 type UploadAvatarResp struct{}
+
+type BindEmailResp struct{}
+
+type UnbindEmailResp struct{}
+
+type ValidEmailResp struct{}

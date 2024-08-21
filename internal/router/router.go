@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/hespecial/gin-mall/global"
 	"github.com/hespecial/gin-mall/internal/api"
+	"github.com/hespecial/gin-mall/internal/common/constant"
 	"github.com/hespecial/gin-mall/internal/middleware"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -51,6 +52,11 @@ func newRouter() *gin.Engine {
 				user.PUT("/info", api.UserInfoUpdate)
 				user.PUT("/password", api.UserPasswordChange)
 				user.POST("/avatar", api.UploadAvatar)
+				user.POST("/email/bind",
+					middleware.Limiter(constant.EmailLimiterR, constant.EmailLimiterB),
+					api.BindEmail,
+				)
+				user.GET("/email/valid", api.ValidEmail)
 			}
 		}
 	}

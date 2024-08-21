@@ -17,6 +17,7 @@ func init() {
 	initialize.CreateDirectories()
 	initialize.InitJWT()
 	initialize.InitOSS()
+	initialize.InitEmail()
 }
 
 //	@title			gin-mall

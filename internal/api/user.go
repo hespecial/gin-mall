@@ -22,6 +22,10 @@ import (
 //	@Router			/user/info [get]
 func ShowUserInfo(c *gin.Context) {
 	var req *request.ShowUserInfoReq
+	if err := c.ShouldBind(&req); err != nil {
+		common.FailWithMsg(c, e.InvalidParams, validator.GetErrorMsg(req, err))
+		return
+	}
 
 	resp, code, isLogicError := service.UserService.ShowUserInfo(c, req)
 	if code != e.Success {
@@ -35,14 +39,13 @@ func ShowUserInfo(c *gin.Context) {
 // UserInfoUpdate godoc
 //
 //	@Summary		修改用户信息
-//	@Description	可修改昵称和邮箱
+//	@Description	可修改用户昵称
 //	@Tags			User
 //	@Security		AccessToken
 //	@Security		RefreshToken
 //	@Accept			x-www-form-urlencoded
 //	@Produce		json
 //	@Param			nickname	formData	string	true	"昵称"
-//	@Param			email		formData	string	true	"邮箱"
 //	@Success		200			{object}	common.Response{data=response.UserInfoUpdateResp}
 //	@Router			/user/info [put]
 func UserInfoUpdate(c *gin.Context) {
@@ -111,6 +114,61 @@ func UploadAvatar(c *gin.Context) {
 	}
 
 	resp, code, isLogicError := service.UserService.UploadAvatar(c, avatar)
+	if code != e.Success {
+		common.Fail(c, code, isLogicError)
+		return
+	}
+
+	common.Success(c, resp)
+}
+
+// BindEmail godoc
+//
+//	@Summary		绑定邮箱
+//	@Description	发送邮件到用户指定邮箱，用户确认后进行绑定
+//	@Tags			User
+//	@Security		AccessToken
+//	@Security		RefreshToken
+//	@Accept			x-www-form-urlencoded
+//	@Produce		json
+//	@Param			email	formData	string	true	"邮箱"
+//	@Success		200		{object}	common.Response{data=response.BindEmailResp}
+//	@Router			/user/email/bind [post]
+func BindEmail(c *gin.Context) {
+	var req *request.BindEmailReq
+	if err := c.ShouldBind(&req); err != nil {
+		common.FailWithMsg(c, e.InvalidParams, validator.GetErrorMsg(req, err))
+		return
+	}
+
+	resp, code, isLogicError := service.UserService.BindEmail(c, req)
+	if code != e.Success {
+		common.Fail(c, code, isLogicError)
+		return
+	}
+
+	common.Success(c, resp)
+}
+
+// ValidEmail godoc
+//
+//	@Summary		邮箱绑定确认
+//	@Description	通过指定链接确认绑定操作
+//	@Tags			User
+//	@Security		AccessToken
+//	@Security		RefreshToken
+//	@Produce		json
+//	@Param			token	query		string	true	"email token"
+//	@Success		200		{object}	common.Response{data=response.ValidEmailResp}
+//	@Router			/user/email/valid [get]
+func ValidEmail(c *gin.Context) {
+	var req *request.ValidEmailReq
+	if err := c.ShouldBind(&req); err != nil {
+		common.FailWithMsg(c, e.InvalidParams, validator.GetErrorMsg(req, err))
+		return
+	}
+
+	resp, code, isLogicError := service.UserService.ValidEmail(c, req)
 	if code != e.Success {
 		common.Fail(c, code, isLogicError)
 		return

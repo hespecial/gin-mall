@@ -28,6 +28,11 @@ var msg = map[Code]string{
 	ErrorFileError:      "文件错误",
 	ErrorOSSUploadError: "OSS文件上传错误",
 	ErrorFileType:       "文件类型错误",
+
+	ErrorSendEmail:            "发送邮件错误",
+	ErrorUpdateEmail:          "更新邮箱错误",
+	ErrorEmailLinkExpire:      "邮件确认链接已过期",
+	ErrorSendEmailTooFrequent: "邮件发送操作过于频繁，请稍后再试",
 }
 
 func (c Code) Msg() string {

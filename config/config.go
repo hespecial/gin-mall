@@ -9,6 +9,7 @@ type Config struct {
 	Image  *Image
 	Oss    *Oss
 	Jwt    *Jwt
+	Email  *Email
 }
 
 type Server struct {
@@ -70,4 +71,12 @@ type Jwt struct {
 	Issuer          string
 	AccessTokenTTl  int `mapstructure:"access_token_ttl"`
 	RefreshTokenTTl int `mapstructure:"refresh_token_ttl"`
+}
+
+type Email struct {
+	Host     string
+	Port     int
+	Username string
+	Alias    string
+	Password string
 }

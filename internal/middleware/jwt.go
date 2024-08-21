@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/hespecial/gin-mall/internal/common/enum"
+	"github.com/hespecial/gin-mall/internal/common/constant"
 	"github.com/hespecial/gin-mall/pkg/jwt"
 	"net/http"
 	"strings"
@@ -53,8 +53,8 @@ func JWTAuthMiddleware() gin.HandlerFunc {
 		}
 
 		// 将用户信息存储在上下文中
-		c.Set(enum.UserID, claims.UserID)
-		c.Set(enum.Username, claims.Username)
+		c.Set(constant.UserID, claims.UserID)
+		c.Set(constant.Username, claims.Username)
 
 		// 继续处理请求
 		c.Next()

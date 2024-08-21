@@ -4,14 +4,12 @@ import "github.com/hespecial/gin-mall/pkg/validator"
 
 type UserInfoUpdateReq struct {
 	Nickname string `form:"nickname" json:"nickname" binding:"required,max=32"`
-	Email    string `form:"email" json:"email" binding:"email"`
 }
 
 func (*UserInfoUpdateReq) ErrorMessages() validator.ValidateMessages {
 	return validator.ValidateMessages{
 		"Nickname.required": "昵称不能为空",
 		"Nickname.max":      "昵称最大长度为32个字符",
-		"Email.email":       "邮箱格式错误",
 	}
 }
 
@@ -33,3 +31,25 @@ func (*UserPasswordChangeReq) ErrorMessages() validator.ValidateMessages {
 type ShowUserInfoReq struct{}
 
 type UpdateAvatarReq struct{}
+
+type BindEmailReq struct {
+	Email string `form:"email" json:"email" binding:"email"`
+}
+
+func (*BindEmailReq) ErrorMessages() validator.ValidateMessages {
+	return validator.ValidateMessages{
+		"Email.email": "邮箱格式错误",
+	}
+}
+
+type UnbindEmailReq struct{}
+
+type ValidEmailReq struct {
+	Token string `form:"token" binding:"required"`
+}
+
+func (*ValidEmailReq) ErrorMessages() validator.ValidateMessages {
+	return validator.ValidateMessages{
+		"Token.required": "缺失token",
+	}
+}

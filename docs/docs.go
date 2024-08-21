@@ -185,6 +185,107 @@ const docTemplate = `{
                 }
             }
         },
+        "/user/email/bind": {
+            "post": {
+                "security": [
+                    {
+                        "AccessToken": []
+                    },
+                    {
+                        "RefreshToken": []
+                    }
+                ],
+                "description": "发送邮件到用户指定邮箱，用户确认后进行绑定",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "绑定邮箱",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "邮箱",
+                        "name": "email",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/common.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/response.BindEmailResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/user/email/valid": {
+            "get": {
+                "security": [
+                    {
+                        "AccessToken": []
+                    },
+                    {
+                        "RefreshToken": []
+                    }
+                ],
+                "description": "通过指定链接确认绑定操作",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "邮箱绑定确认",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "email token",
+                        "name": "token",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/common.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/response.ValidEmailResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/user/info": {
             "get": {
                 "security": [
@@ -236,7 +337,7 @@ const docTemplate = `{
                         "RefreshToken": []
                     }
                 ],
-                "description": "可修改昵称和邮箱",
+                "description": "可修改用户昵称",
                 "consumes": [
                     "application/x-www-form-urlencoded"
                 ],
@@ -252,13 +353,6 @@ const docTemplate = `{
                         "type": "string",
                         "description": "昵称",
                         "name": "nickname",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "邮箱",
-                        "name": "email",
                         "in": "formData",
                         "required": true
                     }
@@ -384,19 +478,31 @@ const docTemplate = `{
                 13,
                 14,
                 15,
-                16
+                16,
+                17,
+                18,
+                19,
+                20,
+                21,
+                22
             ],
             "x-enum-comments": {
                 "ErrorAccountInvalid": "用户名或密码错误",
                 "ErrorContextValue": "上下文值传递错误",
                 "ErrorCreateUser": "创建用户错误",
+                "ErrorEmailLinkExpire": "邮件确认链接已过期",
                 "ErrorEncryptMoney": "金额加密错误",
                 "ErrorEncryptPassword": "密码加密错误",
                 "ErrorFileError": "文件错误",
+                "ErrorFileType": "文件类型错误",
                 "ErrorGenerateToken": "token生成错误",
                 "ErrorGetUserByID": "根据id获取用户失败",
                 "ErrorIncorrectPassword": "密码错误",
                 "ErrorOSSUploadError": "OSS文件上传错误",
+                "ErrorParseToken": "token解析错误",
+                "ErrorSendEmail": "发送邮件错误",
+                "ErrorSendEmailTooFrequent": "邮件发送操作频繁",
+                "ErrorUpdateEmail": "更新邮箱错误",
                 "ErrorUpdateUser": "更新用户失败",
                 "ErrorUploadAvatar": "头像上传错误",
                 "ErrorUploadFile": "文件上传错误",
@@ -419,10 +525,16 @@ const docTemplate = `{
                 "ErrorIncorrectPassword",
                 "ErrorUploadAvatar",
                 "ErrorGenerateToken",
+                "ErrorParseToken",
                 "ErrorContextValue",
                 "ErrorUploadFile",
                 "ErrorFileError",
-                "ErrorOSSUploadError"
+                "ErrorOSSUploadError",
+                "ErrorFileType",
+                "ErrorSendEmail",
+                "ErrorUpdateEmail",
+                "ErrorEmailLinkExpire",
+                "ErrorSendEmailTooFrequent"
             ]
         },
         "response.AuthLoginResp": {
@@ -443,6 +555,9 @@ const docTemplate = `{
             }
         },
         "response.AuthRegisterResp": {
+            "type": "object"
+        },
+        "response.BindEmailResp": {
             "type": "object"
         },
         "response.ShowUserInfoResp": {
@@ -472,6 +587,9 @@ const docTemplate = `{
             "type": "object"
         },
         "response.UserPasswordChangeResp": {
+            "type": "object"
+        },
+        "response.ValidEmailResp": {
             "type": "object"
         }
     },
