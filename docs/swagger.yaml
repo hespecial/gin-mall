@@ -325,6 +325,35 @@ paths:
       tags:
       - User
   /user/follow:
+    delete:
+      consumes:
+      - application/json
+      description: 基于id取关用户
+      parameters:
+      - description: 取关用户的id
+        in: body
+        name: id
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.UserUnfollowResp'
+              type: object
+      security:
+      - AccessToken: []
+      - RefreshToken: []
+      summary: 取关用户
+      tags:
+      - User
     post:
       consumes:
       - application/json
@@ -488,36 +517,6 @@ paths:
       - AccessToken: []
       - RefreshToken: []
       summary: 更改用户密码
-      tags:
-      - User
-  /user/unfollow:
-    delete:
-      consumes:
-      - application/json
-      description: 基于id取关用户
-      parameters:
-      - description: 取关用户的id
-        in: body
-        name: id
-        required: true
-        schema:
-          type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            allOf:
-            - $ref: '#/definitions/common.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/response.UserUnfollowResp'
-              type: object
-      security:
-      - AccessToken: []
-      - RefreshToken: []
-      summary: 取关用户
       tags:
       - User
 securityDefinitions:

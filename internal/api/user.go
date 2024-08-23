@@ -212,7 +212,7 @@ func UserFollow(c *gin.Context) {
 //	@Produce		json
 //	@Param			id	body		string	true	"取关用户的id"
 //	@Success		200	{object}	common.Response{data=response.UserUnfollowResp}
-//	@Router			/user/unfollow [delete]
+//	@Router			/user/follow [delete]
 func UserUnfollow(c *gin.Context) {
 	var req *request.UserUnfollowReq
 	if err := c.ShouldBind(&req); err != nil {
