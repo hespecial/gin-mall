@@ -22,10 +22,6 @@ import (
 //	@Router			/user/info [get]
 func ShowUserInfo(c *gin.Context) {
 	var req *request.ShowUserInfoReq
-	if err := c.ShouldBind(&req); err != nil {
-		common.FailWithMsg(c, e.InvalidParams, validator.GetErrorMsg(req, err))
-		return
-	}
 
 	resp, code, isLogicError := service.UserService.ShowUserInfo(c, req)
 	if code != e.Success {
@@ -169,6 +165,108 @@ func ValidEmail(c *gin.Context) {
 	}
 
 	resp, code, isLogicError := service.UserService.ValidEmail(c, req)
+	if code != e.Success {
+		common.Fail(c, code, isLogicError)
+		return
+	}
+
+	common.Success(c, resp)
+}
+
+// UserFollow godoc
+//
+//	@Summary		关注用户
+//	@Description	基于id关注的其他用户
+//	@Tags			User
+//	@Security		AccessToken
+//	@Security		RefreshToken
+//	@Accept			json
+//	@Produce		json
+//	@Param			id	body		string	true	"关注用户的id"
+//	@Success		200	{object}	common.Response{data=response.UserFollowResp}
+//	@Router			/user/follow [post]
+func UserFollow(c *gin.Context) {
+	var req *request.UserFollowReq
+	if err := c.ShouldBind(&req); err != nil {
+		common.FailWithMsg(c, e.InvalidParams, validator.GetErrorMsg(req, err))
+		return
+	}
+
+	resp, code, isLogicError := service.UserService.UserFollow(c, req)
+	if code != e.Success {
+		common.Fail(c, code, isLogicError)
+		return
+	}
+
+	common.Success(c, resp)
+}
+
+// UserUnfollow godoc
+//
+//	@Summary		取关用户
+//	@Description	基于id取关用户
+//	@Tags			User
+//	@Security		AccessToken
+//	@Security		RefreshToken
+//	@Accept			json
+//	@Produce		json
+//	@Param			id	body		string	true	"取关用户的id"
+//	@Success		200	{object}	common.Response{data=response.UserUnfollowResp}
+//	@Router			/user/unfollow [delete]
+func UserUnfollow(c *gin.Context) {
+	var req *request.UserUnfollowReq
+	if err := c.ShouldBind(&req); err != nil {
+		common.FailWithMsg(c, e.InvalidParams, validator.GetErrorMsg(req, err))
+		return
+	}
+
+	resp, code, isLogicError := service.UserService.UserUnfollow(c, req)
+	if code != e.Success {
+		common.Fail(c, code, isLogicError)
+		return
+	}
+
+	common.Success(c, resp)
+}
+
+// UserFollowingList godoc
+//
+//	@Summary		获取关注列表
+//	@Description	获取用户的关注列表，列表中的用户信息包括头像和昵称
+//	@Tags			User
+//	@Security		AccessToken
+//	@Security		RefreshToken
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{object}	common.Response{data=response.UserFollowingListResp}
+//	@Router			/user/following [get]
+func UserFollowingList(c *gin.Context) {
+	var req *request.UserFollowingListReq
+
+	resp, code, isLogicError := service.UserService.UserFollowingList(c, req)
+	if code != e.Success {
+		common.Fail(c, code, isLogicError)
+		return
+	}
+
+	common.Success(c, resp)
+}
+
+// UserFollowerList godoc
+//
+//	@Summary		获取粉丝列表
+//	@Description	获取用户的粉丝列表，列表中的用户信息包括头像和昵称
+//	@Tags			User
+//	@Security		AccessToken
+//	@Security		RefreshToken
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{object}	common.Response{data=response.UserFollowerListResp}
+//	@Router			/user/follower [get]
+func UserFollowerList(c *gin.Context) {
+	var req *request.UserFollowerListReq
+
+	resp, code, isLogicError := service.UserService.UserFollowerList(c, req)
 	if code != e.Success {
 		common.Fail(c, code, isLogicError)
 		return

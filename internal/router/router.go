@@ -42,10 +42,10 @@ func newRouter() *gin.Engine {
 			auth.POST("/login", api.Login)
 		}
 
-		// 用户操作
 		authed := v1.Group("")
 		authed.Use(middleware.JWTAuthMiddleware())
 		{
+			// 用户操作
 			user := authed.Group("/user")
 			{
 				user.GET("/info", api.ShowUserInfo)
@@ -57,6 +57,10 @@ func newRouter() *gin.Engine {
 					api.BindEmail,
 				)
 				user.GET("/email/valid", api.ValidEmail)
+				user.POST("/follow", api.UserFollow)
+				user.DELETE("/follow", api.UserUnfollow)
+				user.GET("/following", api.UserFollowingList)
+				user.GET("/follower", api.UserFollowerList)
 			}
 		}
 	}

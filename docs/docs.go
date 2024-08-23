@@ -286,6 +286,146 @@ const docTemplate = `{
                 }
             }
         },
+        "/user/follow": {
+            "post": {
+                "security": [
+                    {
+                        "AccessToken": []
+                    },
+                    {
+                        "RefreshToken": []
+                    }
+                ],
+                "description": "基于id关注的其他用户",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "关注用户",
+                "parameters": [
+                    {
+                        "description": "关注用户的id",
+                        "name": "id",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/common.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/response.UserFollowResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/user/follower": {
+            "get": {
+                "security": [
+                    {
+                        "AccessToken": []
+                    },
+                    {
+                        "RefreshToken": []
+                    }
+                ],
+                "description": "获取用户的粉丝列表，列表中的用户信息包括头像和昵称",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "获取粉丝列表",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/common.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/response.UserFollowerListResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/user/following": {
+            "get": {
+                "security": [
+                    {
+                        "AccessToken": []
+                    },
+                    {
+                        "RefreshToken": []
+                    }
+                ],
+                "description": "获取用户的关注列表，列表中的用户信息包括头像和昵称",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "获取关注列表",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/common.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/response.UserFollowingListResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/user/info": {
             "get": {
                 "security": [
@@ -444,6 +584,60 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/user/unfollow": {
+            "delete": {
+                "security": [
+                    {
+                        "AccessToken": []
+                    },
+                    {
+                        "RefreshToken": []
+                    }
+                ],
+                "description": "基于id取关用户",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "取关用户",
+                "parameters": [
+                    {
+                        "description": "取关用户的id",
+                        "name": "id",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/common.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/response.UserUnfollowResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -484,7 +678,11 @@ const docTemplate = `{
                 19,
                 20,
                 21,
-                22
+                22,
+                23,
+                24,
+                25,
+                26
             ],
             "x-enum-comments": {
                 "ErrorAccountInvalid": "用户名或密码错误",
@@ -495,13 +693,17 @@ const docTemplate = `{
                 "ErrorEncryptPassword": "密码加密错误",
                 "ErrorFileError": "文件错误",
                 "ErrorFileType": "文件类型错误",
+                "ErrorFollowUser": "关注用户失败",
                 "ErrorGenerateToken": "token生成错误",
+                "ErrorGetFollowerList": "获取粉丝列表失败",
+                "ErrorGetFollowingList": "获取关注列表失败",
                 "ErrorGetUserByID": "根据id获取用户失败",
                 "ErrorIncorrectPassword": "密码错误",
                 "ErrorOSSUploadError": "OSS文件上传错误",
                 "ErrorParseToken": "token解析错误",
                 "ErrorSendEmail": "发送邮件错误",
                 "ErrorSendEmailTooFrequent": "邮件发送操作频繁",
+                "ErrorUnfollowUser": "取消关注失败",
                 "ErrorUpdateEmail": "更新邮箱错误",
                 "ErrorUpdateUser": "更新用户失败",
                 "ErrorUploadAvatar": "头像上传错误",
@@ -524,6 +726,10 @@ const docTemplate = `{
                 "ErrorUpdateUser",
                 "ErrorIncorrectPassword",
                 "ErrorUploadAvatar",
+                "ErrorFollowUser",
+                "ErrorUnfollowUser",
+                "ErrorGetFollowingList",
+                "ErrorGetFollowerList",
                 "ErrorGenerateToken",
                 "ErrorParseToken",
                 "ErrorContextValue",
@@ -560,6 +766,17 @@ const docTemplate = `{
         "response.BindEmailResp": {
             "type": "object"
         },
+        "response.Follow": {
+            "type": "object",
+            "properties": {
+                "avatar": {
+                    "type": "string"
+                },
+                "nickname": {
+                    "type": "string"
+                }
+            }
+        },
         "response.ShowUserInfoResp": {
             "type": "object",
             "properties": {
@@ -583,10 +800,38 @@ const docTemplate = `{
         "response.UploadAvatarResp": {
             "type": "object"
         },
+        "response.UserFollowResp": {
+            "type": "object"
+        },
+        "response.UserFollowerListResp": {
+            "type": "object",
+            "properties": {
+                "follower": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.Follow"
+                    }
+                }
+            }
+        },
+        "response.UserFollowingListResp": {
+            "type": "object",
+            "properties": {
+                "following": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.Follow"
+                    }
+                }
+            }
+        },
         "response.UserInfoUpdateResp": {
             "type": "object"
         },
         "response.UserPasswordChangeResp": {
+            "type": "object"
+        },
+        "response.UserUnfollowResp": {
             "type": "object"
         },
         "response.ValidEmailResp": {

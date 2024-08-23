@@ -30,8 +30,6 @@ func (*UserPasswordChangeReq) ErrorMessages() validator.ValidateMessages {
 
 type ShowUserInfoReq struct{}
 
-type UpdateAvatarReq struct{}
-
 type BindEmailReq struct {
 	Email string `form:"email" json:"email" binding:"email"`
 }
@@ -42,8 +40,6 @@ func (*BindEmailReq) ErrorMessages() validator.ValidateMessages {
 	}
 }
 
-type UnbindEmailReq struct{}
-
 type ValidEmailReq struct {
 	Token string `form:"token" binding:"required"`
 }
@@ -53,3 +49,27 @@ func (*ValidEmailReq) ErrorMessages() validator.ValidateMessages {
 		"Token.required": "缺失token",
 	}
 }
+
+type UserFollowReq struct {
+	ID uint `json:"id" binding:"required"`
+}
+
+func (*UserFollowReq) ErrorMessages() validator.ValidateMessages {
+	return validator.ValidateMessages{
+		"ID.required": "缺失ID参数",
+	}
+}
+
+type UserUnfollowReq struct {
+	ID uint `json:"id" binding:"required"`
+}
+
+func (*UserUnfollowReq) ErrorMessages() validator.ValidateMessages {
+	return validator.ValidateMessages{
+		"ID.required": "缺失ID参数",
+	}
+}
+
+type UserFollowingListReq struct{}
+
+type UserFollowerListReq struct{}

@@ -20,3 +20,20 @@ type BindEmailResp struct{}
 type UnbindEmailResp struct{}
 
 type ValidEmailResp struct{}
+
+type UserFollowResp struct{}
+
+type UserUnfollowResp struct{}
+
+type Follow struct {
+	Avatar   string `json:"avatar"`
+	Nickname string `json:"nickname"`
+}
+
+type UserFollowingListResp struct {
+	Following []*Follow `json:"following"`
+}
+
+type UserFollowerListResp struct {
+	Follower []*Follow `json:"follower"`
+}

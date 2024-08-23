@@ -61,6 +61,17 @@ func getAvatarURL(updateMode string, filename string) (url string) {
 	return strings.Join([]string{url, filename}, "/")
 }
 
+func getFollowList(users []*model.User) []*response.Follow {
+	list := make([]*response.Follow, len(users))
+	for i := 0; i < len(users); i++ {
+		list[i] = &response.Follow{
+			Avatar:   users[i].Avatar,
+			Nickname: users[i].Nickname,
+		}
+	}
+	return list
+}
+
 func (*userService) ShowUserInfo(c *gin.Context, _ *request.ShowUserInfoReq) (*response.ShowUserInfoResp, e.Code, bool) {
 	// 从context中获取UserID
 	userID, ok := getUserID(c)
@@ -284,6 +295,80 @@ func (*userService) ValidEmail(c *gin.Context, req *request.ValidEmailReq) (*res
 	}
 
 	resp := &response.ValidEmailResp{}
+
+	return resp, e.Success, e.NotLogicError
+}
+
+func (*userService) UserFollow(c *gin.Context, req *request.UserFollowReq) (*response.UserFollowResp, e.Code, bool) {
+	userID, ok := getUserID(c)
+	if !ok {
+		return nil, e.ErrorContextValue, e.IsLogicError
+	}
+
+	err := dao.FollowUser(userID, req.ID)
+	if err != nil {
+		global.Log.Error("关注用户失败", zap.Error(err))
+		return nil, e.ErrorFollowUser, e.IsLogicError
+	}
+
+	resp := &response.UserFollowResp{}
+
+	return resp, e.Success, e.NotLogicError
+}
+
+func (*userService) UserUnfollow(c *gin.Context, req *request.UserUnfollowReq) (*response.UserUnfollowResp, e.Code, bool) {
+	userID, ok := getUserID(c)
+	if !ok {
+		return nil, e.ErrorContextValue, e.IsLogicError
+	}
+
+	err := dao.UnfollowUser(userID, req.ID)
+	if err != nil {
+		global.Log.Error("取消关注失败", zap.Error(err))
+		return nil, e.ErrorUnfollowUser, e.IsLogicError
+	}
+
+	resp := &response.UserUnfollowResp{}
+
+	return resp, e.Success, e.NotLogicError
+}
+
+func (*userService) UserFollowingList(c *gin.Context, _ *request.UserFollowingListReq) (*response.UserFollowingListResp, e.Code, bool) {
+	userID, ok := getUserID(c)
+	if !ok {
+		return nil, e.ErrorContextValue, e.IsLogicError
+	}
+
+	users, err := dao.GetFollowingUsers(userID)
+	if err != nil {
+		global.Log.Error("获取关注列表失败", zap.Error(err))
+		return nil, e.ErrorGetFollowingList, e.IsLogicError
+	}
+
+	following := getFollowList(users)
+	resp := &response.UserFollowingListResp{
+		Following: following,
+	}
+
+	return resp, e.Success, e.NotLogicError
+}
+
+func (*userService) UserFollowerList(c *gin.Context, _ *request.UserFollowerListReq) (*response.UserFollowerListResp, e.Code, bool) {
+	userID, ok := getUserID(c)
+	if !ok {
+		return nil, e.ErrorContextValue, e.IsLogicError
+	}
+
+	users, err := dao.GetFollowerUsers(userID)
+	if err != nil {
+		global.Log.Error("获取粉丝列表失败", zap.Error(err))
+		return nil, e.ErrorGetFollowerList, e.IsLogicError
+	}
+
+	follower := getFollowList(users)
+	resp := &response.UserFollowerListResp{
+		Follower: follower,
+	}
 
 	return resp, e.Success, e.NotLogicError
 }

@@ -20,6 +20,10 @@ var msg = map[Code]string{
 	ErrorUpdateUser:        "更新用户失败",
 	ErrorIncorrectPassword: "密码错误",
 	ErrorUploadAvatar:      "头像上传错误",
+	ErrorFollowUser:        "关注用户失败",
+	ErrorUnfollowUser:      "取消关注失败",
+	ErrorGetFollowingList:  "获取关注列表失败",
+	ErrorGetFollowerList:   "获取粉丝列表失败",
 
 	ErrorGenerateToken: "token生成错误",
 	ErrorContextValue:  "上下文值传递错误",
