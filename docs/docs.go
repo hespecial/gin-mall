@@ -133,6 +133,41 @@ const docTemplate = `{
                 }
             }
         },
+        "/category": {
+            "get": {
+                "description": "获取所有的商品分类",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Category"
+                ],
+                "summary": "获取商品分类列表",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/common.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/response.GetCategoryListResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/user/avatar": {
             "post": {
                 "security": [
@@ -680,7 +715,8 @@ const docTemplate = `{
                 23,
                 24,
                 25,
-                26
+                26,
+                27
             ],
             "x-enum-comments": {
                 "ErrorAccountInvalid": "用户名或密码错误",
@@ -693,6 +729,7 @@ const docTemplate = `{
                 "ErrorFileType": "文件类型错误",
                 "ErrorFollowUser": "关注用户失败",
                 "ErrorGenerateToken": "token生成错误",
+                "ErrorGetCategoryList": "获取商品分类失败",
                 "ErrorGetFollowerList": "获取粉丝列表失败",
                 "ErrorGetFollowingList": "获取关注列表失败",
                 "ErrorGetUserByID": "根据id获取用户失败",
@@ -738,7 +775,8 @@ const docTemplate = `{
                 "ErrorSendEmail",
                 "ErrorUpdateEmail",
                 "ErrorEmailLinkExpire",
-                "ErrorSendEmailTooFrequent"
+                "ErrorSendEmailTooFrequent",
+                "ErrorGetCategoryList"
             ]
         },
         "response.AuthLoginResp": {
@@ -764,6 +802,17 @@ const docTemplate = `{
         "response.BindEmailResp": {
             "type": "object"
         },
+        "response.Category": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
         "response.Follow": {
             "type": "object",
             "properties": {
@@ -772,6 +821,20 @@ const docTemplate = `{
                 },
                 "nickname": {
                     "type": "string"
+                }
+            }
+        },
+        "response.GetCategoryListResp": {
+            "type": "object",
+            "properties": {
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.Category"
+                    }
+                },
+                "total": {
+                    "type": "integer"
                 }
             }
         },

@@ -37,6 +37,8 @@ var msg = map[Code]string{
 	ErrorUpdateEmail:          "更新邮箱错误",
 	ErrorEmailLinkExpire:      "邮件确认链接已过期",
 	ErrorSendEmailTooFrequent: "邮件发送操作过于频繁，请稍后再试",
+
+	ErrorGetCategoryList: "获取商品分类失败",
 }
 
 func (c Code) Msg() string {

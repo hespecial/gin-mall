@@ -37,6 +37,7 @@ definitions:
     - 24
     - 25
     - 26
+    - 27
     type: integer
     x-enum-comments:
       ErrorAccountInvalid: 用户名或密码错误
@@ -49,6 +50,7 @@ definitions:
       ErrorFileType: 文件类型错误
       ErrorFollowUser: 关注用户失败
       ErrorGenerateToken: token生成错误
+      ErrorGetCategoryList: 获取商品分类失败
       ErrorGetFollowerList: 获取粉丝列表失败
       ErrorGetFollowingList: 获取关注列表失败
       ErrorGetUserByID: 根据id获取用户失败
@@ -94,6 +96,7 @@ definitions:
     - ErrorUpdateEmail
     - ErrorEmailLinkExpire
     - ErrorSendEmailTooFrequent
+    - ErrorGetCategoryList
   response.AuthLoginResp:
     properties:
       access_token:
@@ -109,12 +112,28 @@ definitions:
     type: object
   response.BindEmailResp:
     type: object
+  response.Category:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
   response.Follow:
     properties:
       avatar:
         type: string
       nickname:
         type: string
+    type: object
+  response.GetCategoryListResp:
+    properties:
+      list:
+        items:
+          $ref: '#/definitions/response.Category'
+        type: array
+      total:
+        type: integer
     type: object
   response.ShowUserInfoResp:
     properties:
@@ -239,6 +258,26 @@ paths:
       summary: 用户注册
       tags:
       - Auth
+  /category:
+    get:
+      consumes:
+      - application/json
+      description: 获取所有的商品分类
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.GetCategoryListResp'
+              type: object
+      summary: 获取商品分类列表
+      tags:
+      - Category
   /user/avatar:
     post:
       consumes:

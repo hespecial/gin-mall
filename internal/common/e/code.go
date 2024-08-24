@@ -34,4 +34,6 @@ const (
 	ErrorUpdateEmail          // 更新邮箱错误
 	ErrorEmailLinkExpire      // 邮件确认链接已过期
 	ErrorSendEmailTooFrequent // 邮件发送操作频繁
+
+	ErrorGetCategoryList // 获取商品分类失败
 )

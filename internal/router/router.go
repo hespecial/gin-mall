@@ -35,6 +35,9 @@ func newRouter() *gin.Engine {
 			c.JSON(http.StatusOK, "success")
 		})
 
+		// 公共接口
+		v1.GET("/category", api.GetCategoryList)
+
 		// 认证
 		auth := v1.Group("/auth")
 		{
@@ -42,6 +45,7 @@ func newRouter() *gin.Engine {
 			auth.POST("/login", api.Login)
 		}
 
+		// 保护接口
 		authed := v1.Group("")
 		authed.Use(middleware.JWTAuthMiddleware())
 		{
