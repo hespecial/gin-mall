@@ -36,4 +36,7 @@ const (
 	ErrorSendEmailTooFrequent // 邮件发送操作频繁
 
 	ErrorGetCategoryList // 获取商品分类失败
+	ErrorGetProductList  // 获取商品列表失败
+	ErrorGetProductByID  // 根据ID获取商品失败
+	ErrorInvalidIDParam  // 非法的id参数
 )

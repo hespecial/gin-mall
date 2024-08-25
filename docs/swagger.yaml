@@ -38,6 +38,9 @@ definitions:
     - 25
     - 26
     - 27
+    - 28
+    - 29
+    - 30
     type: integer
     x-enum-comments:
       ErrorAccountInvalid: 用户名或密码错误
@@ -53,8 +56,11 @@ definitions:
       ErrorGetCategoryList: 获取商品分类失败
       ErrorGetFollowerList: 获取粉丝列表失败
       ErrorGetFollowingList: 获取关注列表失败
+      ErrorGetProductByID: 根据ID获取商品失败
+      ErrorGetProductList: 获取商品列表失败
       ErrorGetUserByID: 根据id获取用户失败
       ErrorIncorrectPassword: 密码错误
+      ErrorInvalidIDParam: 非法的id参数
       ErrorOSSUploadError: OSS文件上传错误
       ErrorParseToken: token解析错误
       ErrorSendEmail: 发送邮件错误
@@ -97,6 +103,9 @@ definitions:
     - ErrorEmailLinkExpire
     - ErrorSendEmailTooFrequent
     - ErrorGetCategoryList
+    - ErrorGetProductList
+    - ErrorGetProductByID
+    - ErrorInvalidIDParam
   response.AuthLoginResp:
     properties:
       access_token:
@@ -134,6 +143,33 @@ definitions:
         type: array
       total:
         type: integer
+    type: object
+  response.GetProductListResp:
+    properties:
+      list:
+        items:
+          $ref: '#/definitions/response.Product'
+        type: array
+      total:
+        type: integer
+    type: object
+  response.Product:
+    properties:
+      id:
+        description: 商品ID
+        type: integer
+      image_url:
+        description: 商品主图的URL
+        type: string
+      price:
+        description: 商品价格
+        type: number
+      stock:
+        description: 库存数量
+        type: integer
+      title:
+        description: 商品名称
+        type: string
     type: object
   response.ShowUserInfoResp:
     properties:
@@ -278,6 +314,59 @@ paths:
       summary: 获取商品分类列表
       tags:
       - Category
+  /product/{id}:
+    get:
+      description: 通过商品ID获取商品详情信息
+      parameters:
+      - description: 商品id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.GetProductListResp'
+              type: object
+      summary: 获取商品详情
+      tags:
+      - Product
+  /products:
+    get:
+      description: 通过页号和页码获取指定的商品列表
+      parameters:
+      - description: 页号
+        in: query
+        name: page
+        required: true
+        type: integer
+      - description: 大小
+        in: query
+        name: size
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.GetProductListResp'
+              type: object
+      summary: 获取商品列表
+      tags:
+      - Product
   /user/avatar:
     post:
       consumes:

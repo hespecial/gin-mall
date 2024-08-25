@@ -22,13 +22,13 @@ import (
 //	@Success		200					{object}	common.Response{data=response.AuthRegisterResp}
 //	@Router			/auth/register [post]
 func Register(c *gin.Context) {
-	var req *request.AuthRegisterReq
+	var req request.AuthRegisterReq
 	if err := c.ShouldBind(&req); err != nil {
 		common.FailWithMsg(c, e.InvalidParams, validator.GetErrorMsg(req, err))
 		return
 	}
 
-	resp, code, isLogicError := service.AuthService.Register(c, req)
+	resp, code, isLogicError := service.AuthService.Register(c, &req)
 	if code != e.Success {
 		common.Fail(c, code, isLogicError)
 		return
@@ -49,13 +49,13 @@ func Register(c *gin.Context) {
 //	@Success		200			{object}	common.Response{data=response.AuthLoginResp}
 //	@Router			/auth/login [post]
 func Login(c *gin.Context) {
-	var req *request.AuthLoginReq
+	var req request.AuthLoginReq
 	if err := c.ShouldBind(&req); err != nil {
 		common.FailWithMsg(c, e.InvalidParams, validator.GetErrorMsg(req, err))
 		return
 	}
 
-	resp, code, isLogicError := service.AuthService.Login(c, req)
+	resp, code, isLogicError := service.AuthService.Login(c, &req)
 	if code != e.Success {
 		common.Fail(c, code, isLogicError)
 		return

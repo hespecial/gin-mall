@@ -56,7 +56,8 @@ type Es struct {
 }
 
 type Image struct {
-	AvatarDir string `mapstructure:"avatar_dir"`
+	AvatarDir  string `mapstructure:"avatar_dir"`
+	ProductDir string `mapstructure:"product_dir"`
 }
 
 type Oss struct {

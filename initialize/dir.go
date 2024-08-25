@@ -9,7 +9,10 @@ func CreateDirectories() {
 	var directories []string
 
 	directories = append(directories, global.Config.Log.Dir)
-	directories = append(directories, global.Config.Image.AvatarDir)
+	directories = append(directories,
+		global.Config.Image.AvatarDir,
+		global.Config.Image.ProductDir,
+	)
 
 	for _, dir := range directories {
 		files.CreateRootDir(dir)

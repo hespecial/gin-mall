@@ -18,9 +18,9 @@ import (
 //	@Success		200	{object}	common.Response{data=response.GetCategoryListResp}
 //	@Router			/category [get]
 func GetCategoryList(c *gin.Context) {
-	var req *request.GetCategoryListReq
+	var req request.GetCategoryListReq
 
-	resp, code, isLogicError := service.CategoryService.GetCategoryList(c, req)
+	resp, code, isLogicError := service.CategoryService.GetCategoryList(c, &req)
 	if code != e.Success {
 		common.Fail(c, code, isLogicError)
 		return

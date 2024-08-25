@@ -168,6 +168,95 @@ const docTemplate = `{
                 }
             }
         },
+        "/product/{id}": {
+            "get": {
+                "description": "通过商品ID获取商品详情信息",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product"
+                ],
+                "summary": "获取商品详情",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "商品id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/common.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/response.GetProductListResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/products": {
+            "get": {
+                "description": "通过页号和页码获取指定的商品列表",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product"
+                ],
+                "summary": "获取商品列表",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "页号",
+                        "name": "page",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "大小",
+                        "name": "size",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/common.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/response.GetProductListResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/user/avatar": {
             "post": {
                 "security": [
@@ -716,7 +805,10 @@ const docTemplate = `{
                 24,
                 25,
                 26,
-                27
+                27,
+                28,
+                29,
+                30
             ],
             "x-enum-comments": {
                 "ErrorAccountInvalid": "用户名或密码错误",
@@ -732,8 +824,11 @@ const docTemplate = `{
                 "ErrorGetCategoryList": "获取商品分类失败",
                 "ErrorGetFollowerList": "获取粉丝列表失败",
                 "ErrorGetFollowingList": "获取关注列表失败",
+                "ErrorGetProductByID": "根据ID获取商品失败",
+                "ErrorGetProductList": "获取商品列表失败",
                 "ErrorGetUserByID": "根据id获取用户失败",
                 "ErrorIncorrectPassword": "密码错误",
+                "ErrorInvalidIDParam": "非法的id参数",
                 "ErrorOSSUploadError": "OSS文件上传错误",
                 "ErrorParseToken": "token解析错误",
                 "ErrorSendEmail": "发送邮件错误",
@@ -776,7 +871,10 @@ const docTemplate = `{
                 "ErrorUpdateEmail",
                 "ErrorEmailLinkExpire",
                 "ErrorSendEmailTooFrequent",
-                "ErrorGetCategoryList"
+                "ErrorGetCategoryList",
+                "ErrorGetProductList",
+                "ErrorGetProductByID",
+                "ErrorInvalidIDParam"
             ]
         },
         "response.AuthLoginResp": {
@@ -835,6 +933,45 @@ const docTemplate = `{
                 },
                 "total": {
                     "type": "integer"
+                }
+            }
+        },
+        "response.GetProductListResp": {
+            "type": "object",
+            "properties": {
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.Product"
+                    }
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "response.Product": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "description": "商品ID",
+                    "type": "integer"
+                },
+                "image_url": {
+                    "description": "商品主图的URL",
+                    "type": "string"
+                },
+                "price": {
+                    "description": "商品价格",
+                    "type": "number"
+                },
+                "stock": {
+                    "description": "库存数量",
+                    "type": "integer"
+                },
+                "title": {
+                    "description": "商品名称",
+                    "type": "string"
                 }
             }
         },

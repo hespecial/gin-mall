@@ -39,6 +39,9 @@ var msg = map[Code]string{
 	ErrorSendEmailTooFrequent: "邮件发送操作过于频繁，请稍后再试",
 
 	ErrorGetCategoryList: "获取商品分类失败",
+	ErrorGetProductList:  "获取商品列表失败",
+	ErrorGetProductByID:  "根据ID获取商品失败",
+	ErrorInvalidIDParam:  "参数不合法",
 }
 
 func (c Code) Msg() string {

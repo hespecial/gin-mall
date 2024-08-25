@@ -158,13 +158,13 @@ func BindEmail(c *gin.Context) {
 //	@Success		200		{object}	common.Response{data=response.ValidEmailResp}
 //	@Router			/user/email/valid [get]
 func ValidEmail(c *gin.Context) {
-	var req *request.ValidEmailReq
+	var req request.ValidEmailReq
 	if err := c.ShouldBind(&req); err != nil {
 		common.FailWithMsg(c, e.InvalidParams, validator.GetErrorMsg(req, err))
 		return
 	}
 
-	resp, code, isLogicError := service.UserService.ValidEmail(c, req)
+	resp, code, isLogicError := service.UserService.ValidEmail(c, &req)
 	if code != e.Success {
 		common.Fail(c, code, isLogicError)
 		return
@@ -186,13 +186,13 @@ func ValidEmail(c *gin.Context) {
 //	@Success		200	{object}	common.Response{data=response.UserFollowResp}
 //	@Router			/user/follow [post]
 func UserFollow(c *gin.Context) {
-	var req *request.UserFollowReq
+	var req request.UserFollowReq
 	if err := c.ShouldBind(&req); err != nil {
 		common.FailWithMsg(c, e.InvalidParams, validator.GetErrorMsg(req, err))
 		return
 	}
 
-	resp, code, isLogicError := service.UserService.UserFollow(c, req)
+	resp, code, isLogicError := service.UserService.UserFollow(c, &req)
 	if code != e.Success {
 		common.Fail(c, code, isLogicError)
 		return
@@ -214,13 +214,13 @@ func UserFollow(c *gin.Context) {
 //	@Success		200	{object}	common.Response{data=response.UserUnfollowResp}
 //	@Router			/user/follow [delete]
 func UserUnfollow(c *gin.Context) {
-	var req *request.UserUnfollowReq
+	var req request.UserUnfollowReq
 	if err := c.ShouldBind(&req); err != nil {
 		common.FailWithMsg(c, e.InvalidParams, validator.GetErrorMsg(req, err))
 		return
 	}
 
-	resp, code, isLogicError := service.UserService.UserUnfollow(c, req)
+	resp, code, isLogicError := service.UserService.UserUnfollow(c, &req)
 	if code != e.Success {
 		common.Fail(c, code, isLogicError)
 		return
@@ -241,9 +241,9 @@ func UserUnfollow(c *gin.Context) {
 //	@Success		200	{object}	common.Response{data=response.UserFollowingListResp}
 //	@Router			/user/following [get]
 func UserFollowingList(c *gin.Context) {
-	var req *request.UserFollowingListReq
+	var req request.UserFollowingListReq
 
-	resp, code, isLogicError := service.UserService.UserFollowingList(c, req)
+	resp, code, isLogicError := service.UserService.UserFollowingList(c, &req)
 	if code != e.Success {
 		common.Fail(c, code, isLogicError)
 		return
@@ -264,9 +264,9 @@ func UserFollowingList(c *gin.Context) {
 //	@Success		200	{object}	common.Response{data=response.UserFollowerListResp}
 //	@Router			/user/follower [get]
 func UserFollowerList(c *gin.Context) {
-	var req *request.UserFollowerListReq
+	var req request.UserFollowerListReq
 
-	resp, code, isLogicError := service.UserService.UserFollowerList(c, req)
+	resp, code, isLogicError := service.UserService.UserFollowerList(c, &req)
 	if code != e.Success {
 		common.Fail(c, code, isLogicError)
 		return

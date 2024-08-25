@@ -4,16 +4,16 @@ import "gorm.io/gorm"
 
 type Product struct {
 	gorm.Model
-	Name          string `gorm:"size:255;index"`
-	CategoryID    uint   `gorm:"not null"`
-	Title         string
-	Info          string `gorm:"size:1000"`
-	ImgPath       string
-	Price         string
-	DiscountPrice string
-	OnSale        bool `gorm:"default:false"`
-	Num           int
-	BossID        uint
-	BossName      string
-	BossAvatar    string
+	Title      string         `gorm:"size:255;not null"` // 商品标题
+	Price      float64        `gorm:"not null"`          // 商品价格
+	Stock      int            `gorm:"not null"`          // 库存数量
+	CategoryID uint           // 外键，指向商品分类
+	Category   Category       // 商品分类，使用GORM的外键关联
+	Images     []ProductImage `gorm:"foreignKey:ProductID"` // 商品图片，一对多关系
+}
+
+type ProductImage struct {
+	ID        uint   `gorm:"primaryKey"`
+	ProductID uint   // 外键，指向所属商品
+	URL       string `gorm:"size:255;not null"` // 图片URL
 }
