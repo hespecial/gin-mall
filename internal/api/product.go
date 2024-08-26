@@ -12,7 +12,7 @@ import (
 // GetProductList godoc
 //
 //	@Summary		获取商品列表
-//	@Description	通过页号和页码获取指定的商品列表
+//	@Description	通过页号和大小获取指定的商品列表
 //	@Tags			Product
 //	@Produce		json
 //	@Param			page	query		int	true	"页号"
@@ -52,6 +52,33 @@ func GetProductDetailInfo(c *gin.Context) {
 	}
 
 	resp, code, isLogicError := service.ProductService.GetProductDetailInfo(c, &req)
+	if code != e.Success {
+		common.Fail(c, code, isLogicError)
+		return
+	}
+
+	common.Success(c, resp)
+}
+
+// SearchProduct godoc
+//
+//	@Summary		搜索商品
+//	@Description	通过关键词并指定页号和大小来获取查询的商品
+//	@Tags			Product
+//	@Produce		json
+//	@Param			keyword	query		string	true	"关键词"
+//	@Param			page	query		int		true	"页号"
+//	@Param			size	query		int		true	"大小"
+//	@Success		200		{object}	common.Response{data=response.SearchProductResp}
+//	@Router			/product/search [get]
+func SearchProduct(c *gin.Context) {
+	var req request.SearchProductReq
+	if err := c.ShouldBind(&req); err != nil {
+		common.FailWithMsg(c, e.InvalidParams, validator.GetErrorMsg(req, err))
+		return
+	}
+
+	resp, code, isLogicError := service.ProductService.SearchProduct(c, &req)
 	if code != e.Success {
 		common.Fail(c, code, isLogicError)
 		return

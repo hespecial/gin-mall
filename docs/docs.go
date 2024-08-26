@@ -168,6 +168,61 @@ const docTemplate = `{
                 }
             }
         },
+        "/product/search": {
+            "get": {
+                "description": "通过关键词并指定页号和大小来获取查询的商品",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product"
+                ],
+                "summary": "搜索商品",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "关键词",
+                        "name": "keyword",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "页号",
+                        "name": "page",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "大小",
+                        "name": "size",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/common.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/response.SearchProductResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/product/{id}": {
             "get": {
                 "description": "通过商品ID获取商品详情信息",
@@ -211,7 +266,7 @@ const docTemplate = `{
         },
         "/products": {
             "get": {
-                "description": "通过页号和页码获取指定的商品列表",
+                "description": "通过页号和大小获取指定的商品列表",
                 "produces": [
                     "application/json"
                 ],
@@ -808,7 +863,8 @@ const docTemplate = `{
                 27,
                 28,
                 29,
-                30
+                30,
+                31
             ],
             "x-enum-comments": {
                 "ErrorAccountInvalid": "用户名或密码错误",
@@ -831,6 +887,7 @@ const docTemplate = `{
                 "ErrorInvalidIDParam": "非法的id参数",
                 "ErrorOSSUploadError": "OSS文件上传错误",
                 "ErrorParseToken": "token解析错误",
+                "ErrorSearchProduct": "搜索商品失败",
                 "ErrorSendEmail": "发送邮件错误",
                 "ErrorSendEmailTooFrequent": "邮件发送操作频繁",
                 "ErrorUnfollowUser": "取消关注失败",
@@ -874,7 +931,8 @@ const docTemplate = `{
                 "ErrorGetCategoryList",
                 "ErrorGetProductList",
                 "ErrorGetProductByID",
-                "ErrorInvalidIDParam"
+                "ErrorInvalidIDParam",
+                "ErrorSearchProduct"
             ]
         },
         "response.AuthLoginResp": {
@@ -945,6 +1003,12 @@ const docTemplate = `{
                         "$ref": "#/definitions/response.Product"
                     }
                 },
+                "page": {
+                    "type": "integer"
+                },
+                "size": {
+                    "type": "integer"
+                },
                 "total": {
                     "type": "integer"
                 }
@@ -972,6 +1036,26 @@ const docTemplate = `{
                 "title": {
                     "description": "商品名称",
                     "type": "string"
+                }
+            }
+        },
+        "response.SearchProductResp": {
+            "type": "object",
+            "properties": {
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.Product"
+                    }
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "size": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
                 }
             }
         },

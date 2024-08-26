@@ -42,6 +42,7 @@ var msg = map[Code]string{
 	ErrorGetProductList:  "获取商品列表失败",
 	ErrorGetProductByID:  "根据ID获取商品失败",
 	ErrorInvalidIDParam:  "参数不合法",
+	ErrorSearchProduct:   "搜索商品失败",
 }
 
 func (c Code) Msg() string {

@@ -3,7 +3,7 @@ package initialize
 import (
 	"fmt"
 	"github.com/hespecial/gin-mall/global"
-	"github.com/olivere/elastic"
+	"github.com/olivere/elastic/v7"
 )
 
 func InitEs() *elastic.Client {

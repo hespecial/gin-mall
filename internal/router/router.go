@@ -39,6 +39,7 @@ func newRouter() *gin.Engine {
 		v1.GET("/category", api.GetCategoryList)
 		v1.GET("/products", api.GetProductList)
 		v1.GET("/product/:id", api.GetProductDetailInfo)
+		v1.GET("/product/search", api.SearchProduct)
 
 		// 认证
 		auth := v1.Group("/auth")

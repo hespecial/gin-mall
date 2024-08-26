@@ -11,7 +11,7 @@ import (
 func init() {
 	global.Config = initialize.LoadConfig()
 	global.DB = initialize.InitMySQL()
-	// global.EsClient = initialize.InitEs()
+	global.EsClient = initialize.InitEs()
 	global.Log = initialize.InitLogger()
 
 	initialize.CreateDirectories()

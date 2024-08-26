@@ -1,0 +1,220 @@
+PUT /products
+{
+  "mappings": {
+    "properties": {
+      "id": {
+        "type": "integer"
+      },
+      "title": {
+        "type": "text",
+        "analyzer": "ik_max_word",
+        "search_analyzer": "ik_smart"
+      },
+      "price": {
+        "type": "double"
+      },
+      "stock": {
+        "type": "integer"
+      },
+      "category": {
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "text"
+          }
+        }
+      },
+      "images": {
+        "type": "nested",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "url": {
+            "type": "text"
+          }
+        }
+      }
+    }
+  }
+}
+
+POST /products/_doc/1
+{
+  "title": "苹果iPhone 15 Pro Max 256GB 深空黑色 智能手机",
+  "price": 12999,
+  "stock": 500,
+  "category": {
+    "id": 1,
+    "name": "电子产品"
+  },
+  "images": [
+    {
+      "id": 1,
+      "url": "http://localhost:8080/storage/product/iphone15_1.jpg"
+    },
+    {
+      "id": 2,
+      "url": "http://localhost:8080/storage/product/iphone15_2.jpg"
+    },
+    {
+      "id": 3,
+      "url": "http://localhost:8080/storage/product/iphone15_3.jpg"
+    }
+  ]
+}
+
+POST /products/_doc/2
+{
+  "title": "三星 Galaxy S24 Ultra 1TB 旗舰手机",
+  "price": 10999,
+  "stock": 300,
+  "category": {
+    "id": 1,
+    "name": "电子产品"
+  },
+  "images": [
+    {
+      "id": 4,
+      "url": "http://localhost:8080/storage/product/default.jpg"
+    }
+  ]
+}
+
+POST /products/_doc/3
+{
+  "title": "《Go语言编程》：从入门到精通的实战指南",
+  "price": 79.99,
+  "stock": 200,
+  "category": {
+    "id": 2,
+    "name": "书籍"
+  },
+  "images": [
+    {
+      "id": 5,
+      "url": "http://localhost:8080/storage/product/default.jpg"
+    }
+  ]
+}
+
+POST /products/_doc/4
+{
+  "title": "耐克 Air Max 2024 男款跑步鞋",
+  "price": 899,
+  "stock": 150,
+  "category": {
+    "id": 3,
+    "name": "服装"
+  },
+  "images": [
+    {
+      "id": 6,
+      "url": "http://localhost:8080/storage/product/default.jpg"
+    }
+  ]
+}
+
+POST /products/_doc/5
+{
+  "title": "宜家 LIATORP 书架 白色",
+  "price": 399,
+  "stock": 100,
+  "category": {
+    "id": 4,
+    "name": "家居用品"
+  },
+  "images": [
+    {
+      "id": 7,
+      "url": "http://localhost:8080/storage/product/default.jpg"
+    }
+  ]
+}
+
+POST /products/_doc/6
+{
+  "title": "乐高 Creator 3合1 矿车和挖掘机玩具套装",
+  "price": 299,
+  "stock": 250,
+  "category": {
+    "id": 5,
+    "name": "玩具"
+  },
+  "images": [
+    {
+      "id": 8,
+      "url": "http://localhost:8080/storage/product/default.jpg"
+    }
+  ]
+}
+
+POST /products/_doc/7
+{
+  "title": "飞利浦 Sonicare 智能声波牙刷",
+  "price": 599,
+  "stock": 100,
+  "category": {
+    "id": 6,
+    "name": "健康与个人护理"
+  },
+  "images": [
+    {
+      "id": 9,
+      "url": "http://localhost:8080/storage/product/default.jpg"
+    }
+  ]
+}
+
+POST /products/_doc/8
+{
+  "title": "威尔胜 运动水壶 1000ml",
+  "price": 79.99,
+  "stock": 300,
+  "category": {
+    "id": 7,
+    "name": "运动户外"
+  },
+  "images": [
+    {
+      "id": 10,
+      "url": "http://localhost:8080/storage/product/default.jpg"
+    }
+  ]
+}
+
+POST /products/_doc/9
+{
+  "title": "汽车座垫全套 高级皮质",
+  "price": 499,
+  "stock": 150,
+  "category": {
+    "id": 8,
+    "name": "汽车用品"
+  },
+  "images": [
+    {
+      "id": 11,
+      "url": "http://localhost:8080/storage/product/default.jpg"
+    }
+  ]
+}
+
+POST /products/_doc/10
+{
+  "title": "兰蔻 超水盈保湿精华液 30ml",
+  "price": 899,
+  "stock": 200,
+  "category": {
+    "id": 9,
+    "name": "美容护肤"
+  },
+  "images": [
+    {
+      "id": 12,
+      "url": "http://localhost:8080/storage/product/default.jpg"
+    }
+  ]
+}

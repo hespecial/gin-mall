@@ -7,6 +7,7 @@ import (
 	"github.com/hespecial/gin-mall/internal/api/response"
 	"github.com/hespecial/gin-mall/internal/common/e"
 	"github.com/hespecial/gin-mall/internal/repository/dao"
+	"github.com/hespecial/gin-mall/internal/repository/es"
 	"go.uber.org/zap"
 )
 
@@ -35,6 +36,8 @@ func (*productService) GetProductList(_ *gin.Context, req *request.GetProductLis
 	resp := &response.GetProductListResp{
 		List:  list,
 		Total: count,
+		Page:  req.Page,
+		Size:  req.Size,
 	}
 
 	return resp, e.Success, e.NotLogicError
@@ -65,6 +68,37 @@ func (*productService) GetProductDetailInfo(_ *gin.Context, req *request.GetProd
 			Name: product.Category.CategoryName,
 		},
 		Images: images,
+	}
+
+	return resp, e.Success, e.NotLogicError
+}
+
+func (*productService) SearchProduct(_ *gin.Context, req *request.SearchProductReq) (*response.SearchProductResp, e.Code, bool) {
+	// mysql搜索
+	// products, count, err := dao.SearchProduct(req.Keyword, req.Page, req.Size)
+	// es搜索
+	products, count, err := es.SearchProduct(req.Keyword, req.Page, req.Size)
+	if err != nil {
+		global.Log.Error("搜索商品失败", zap.Error(err))
+		return nil, e.ErrorSearchProduct, e.IsLogicError
+	}
+
+	var list []*response.Product
+	for _, product := range products {
+		list = append(list, &response.Product{
+			ID:       product.ID,
+			Title:    product.Title,
+			Price:    product.Price,
+			Stock:    product.Stock,
+			ImageURL: product.Images[0].URL,
+		})
+	}
+
+	resp := &response.SearchProductResp{
+		List:  list,
+		Total: count,
+		Page:  req.Page,
+		Size:  req.Size,
 	}
 
 	return resp, e.Success, e.NotLogicError

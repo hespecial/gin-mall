@@ -26,3 +26,13 @@ func (*GetProductDetailInfoReq) ErrorMessages() validator.ValidateMessages {
 		"ID.min":      "参数有误",
 	}
 }
+
+type SearchProductReq struct {
+	Keyword string `form:"keyword" json:"keyword" binding:"required"`
+	Page    int    `form:"page" json:"page" binding:"required,min=1"`
+	Size    int    `form:"size" json:"size" binding:"required,min=1"`
+}
+
+func (*SearchProductReq) ErrorMessages() validator.ValidateMessages {
+	return validator.ValidateMessages{}
+}

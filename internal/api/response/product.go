@@ -9,6 +9,8 @@ type Product struct {
 }
 
 type GetProductListResp struct {
+	Page  int        `json:"page"`
+	Size  int        `json:"size"`
 	List  []*Product `json:"list"`
 	Total int64      `json:"total"`
 }
@@ -25,4 +27,11 @@ type GetProductDetailInfoResp struct {
 	Stock    int             `json:"stock"`
 	Category *Category       `json:"category"`
 	Images   []*ProductImage `json:"images"`
+}
+
+type SearchProductResp struct {
+	Page  int        `json:"page"`
+	Size  int        `json:"size"`
+	List  []*Product `json:"list"`
+	Total int64      `json:"total"`
 }
