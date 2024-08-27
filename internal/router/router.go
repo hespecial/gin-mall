@@ -36,12 +36,18 @@ func newRouter() *gin.Engine {
 		})
 
 		// 公共接口
+		// 分类操作
 		v1.GET("/category", api.GetCategoryList)
-		v1.GET("/products", api.GetProductList)
-		v1.GET("/product/:id", api.GetProductDetailInfo)
-		v1.GET("/product/search", api.SearchProduct)
 
-		// 认证
+		// 商品操作
+		product := v1.Group("")
+		{
+			product.GET("/products", api.GetProductList)
+			product.GET("/product/:id", api.GetProductDetailInfo)
+			product.GET("/product/search", api.SearchProduct)
+		}
+
+		// 认证操作
 		auth := v1.Group("/auth")
 		{
 			auth.POST("/register", api.Register)
@@ -68,6 +74,14 @@ func newRouter() *gin.Engine {
 				user.DELETE("/follow", api.UserUnfollow)
 				user.GET("/following", api.UserFollowingList)
 				user.GET("/follower", api.UserFollowerList)
+			}
+
+			// 收藏操作
+			favorite := authed.Group("/favorite")
+			{
+				favorite.GET("", api.GetFavoriteList)
+				favorite.POST("", api.AddFavorite)
+				favorite.DELETE("", api.DeleteFavorite)
 			}
 		}
 	}

@@ -43,6 +43,10 @@ var msg = map[Code]string{
 	ErrorGetProductByID:  "根据ID获取商品失败",
 	ErrorInvalidIDParam:  "参数不合法",
 	ErrorSearchProduct:   "搜索商品失败",
+
+	ErrorGetFavoriteList: "获取商品列表失败",
+	ErrorAddFavorite:     "收藏商品失败",
+	ErrorDeleteFavorite:  "取消收藏失败",
 }
 
 func (c Code) Msg() string {

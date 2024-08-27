@@ -85,8 +85,8 @@ func getDSN(m *config.MySQL) string {
 func migrate(db *gorm.DB) error {
 	err := db.AutoMigrate(
 		&model.User{},
-		&model.Product{}, &model.ProductImage{},
-		// &model.Favorite{},
+		&model.Product{},
+		&model.ProductImage{},
 		// &model.Order{}, &model.Address{},
 		// &model.Cart{}, &model.Category{},
 		// &model.Notice{},

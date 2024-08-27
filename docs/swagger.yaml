@@ -42,11 +42,16 @@ definitions:
     - 29
     - 30
     - 31
+    - 32
+    - 33
+    - 34
     type: integer
     x-enum-comments:
       ErrorAccountInvalid: 用户名或密码错误
+      ErrorAddFavorite: 收藏商品失败
       ErrorContextValue: 上下文值传递错误
       ErrorCreateUser: 创建用户错误
+      ErrorDeleteFavorite: 取消收藏失败
       ErrorEmailLinkExpire: 邮件确认链接已过期
       ErrorEncryptMoney: 金额加密错误
       ErrorEncryptPassword: 密码加密错误
@@ -55,6 +60,7 @@ definitions:
       ErrorFollowUser: 关注用户失败
       ErrorGenerateToken: token生成错误
       ErrorGetCategoryList: 获取商品分类失败
+      ErrorGetFavoriteList: 获取收藏列表失败
       ErrorGetFollowerList: 获取粉丝列表失败
       ErrorGetFollowingList: 获取关注列表失败
       ErrorGetProductByID: 根据ID获取商品失败
@@ -109,6 +115,11 @@ definitions:
     - ErrorGetProductByID
     - ErrorInvalidIDParam
     - ErrorSearchProduct
+    - ErrorGetFavoriteList
+    - ErrorAddFavorite
+    - ErrorDeleteFavorite
+  response.AddFavoriteResp:
+    type: object
   response.AuthLoginResp:
     properties:
       access_token:
@@ -131,6 +142,19 @@ definitions:
       name:
         type: string
     type: object
+  response.DeleteFavoriteResp:
+    type: object
+  response.Favorite:
+    properties:
+      id:
+        type: integer
+      image_url:
+        type: string
+      price:
+        type: number
+      title:
+        type: string
+    type: object
   response.Follow:
     properties:
       avatar:
@@ -146,6 +170,13 @@ definitions:
         type: array
       total:
         type: integer
+    type: object
+  response.GetFavoriteListResp:
+    properties:
+      list:
+        items:
+          $ref: '#/definitions/response.Favorite'
+        type: array
     type: object
   response.GetProductListResp:
     properties:
@@ -334,6 +365,87 @@ paths:
       summary: 获取商品分类列表
       tags:
       - Category
+  /favorite:
+    delete:
+      consumes:
+      - application/json
+      description: 通过商品id取消收藏
+      parameters:
+      - description: 商品id
+        in: body
+        name: id
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.DeleteFavoriteResp'
+              type: object
+      security:
+      - AccessToken: []
+      - RefreshToken: []
+      summary: 收藏商品
+      tags:
+      - Favorite
+    get:
+      consumes:
+      - application/json
+      description: 登陆用户后可查看已收藏的商品
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.GetFavoriteListResp'
+              type: object
+      security:
+      - AccessToken: []
+      - RefreshToken: []
+      summary: 获取收藏列表
+      tags:
+      - Favorite
+    post:
+      consumes:
+      - application/json
+      description: 通过商品id收藏商品
+      parameters:
+      - description: 商品id
+        in: body
+        name: id
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.AddFavoriteResp'
+              type: object
+      security:
+      - AccessToken: []
+      - RefreshToken: []
+      summary: 取消收藏
+      tags:
+      - Favorite
   /product/{id}:
     get:
       description: 通过商品ID获取商品详情信息

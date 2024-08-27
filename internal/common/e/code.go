@@ -40,4 +40,8 @@ const (
 	ErrorGetProductByID  // 根据ID获取商品失败
 	ErrorInvalidIDParam  // 非法的id参数
 	ErrorSearchProduct   // 搜索商品失败
+
+	ErrorGetFavoriteList // 获取收藏列表失败
+	ErrorAddFavorite     // 收藏商品失败
+	ErrorDeleteFavorite  // 取消收藏失败
 )

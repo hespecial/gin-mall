@@ -20,7 +20,8 @@ type User struct {
 	Status    string
 	Avatar    string `gorm:"size:1000"`
 	Money     string
-	Relations []User `gorm:"many2many:relation;"`
+	Relations []User    `gorm:"many2many:relation;"`
+	Favorites []Product `gorm:"many2many:favorite;"`
 }
 
 func (u *User) GetUserID() uint {
