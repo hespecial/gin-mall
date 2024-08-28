@@ -44,4 +44,10 @@ const (
 	ErrorGetFavoriteList // 获取收藏列表失败
 	ErrorAddFavorite     // 收藏商品失败
 	ErrorDeleteFavorite  // 取消收藏失败
+
+	ErrorGetCart                // 获取购物车失败
+	ErrorAddCartItem            // 添加购物项失败
+	ErrorDeleteCartItem         // 删除购物项失败
+	ErrorClearCart              // 清空购物车失败
+	ErrorUpdateCartItemQuantity // 更新购物项数量失败
 )

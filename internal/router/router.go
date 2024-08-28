@@ -83,6 +83,16 @@ func newRouter() *gin.Engine {
 				favorite.POST("", api.AddFavorite)
 				favorite.DELETE("", api.DeleteFavorite)
 			}
+
+			// 购物车操作
+			cart := authed.Group("/cart")
+			{
+				cart.GET("", api.GetCartList)
+				cart.POST("/item", api.AddCartItem)
+				cart.PUT("/item", api.UpdateCartItemQuantity)
+				cart.DELETE("/item/:id", api.DeleteCartItem)
+				cart.DELETE("", api.ClearCart)
+			}
 		}
 	}
 

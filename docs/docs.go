@@ -133,6 +133,239 @@ const docTemplate = `{
                 }
             }
         },
+        "/cart": {
+            "get": {
+                "security": [
+                    {
+                        "AccessToken": []
+                    },
+                    {
+                        "RefreshToken": []
+                    }
+                ],
+                "description": "获取用户所有加入购物车的商品",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "获取购物车列表",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/common.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/response.GetCartListResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "AccessToken": []
+                    },
+                    {
+                        "RefreshToken": []
+                    }
+                ],
+                "description": "清空用户的购物车",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "清空购物车",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/common.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/response.ClearCartResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/cart/item": {
+            "put": {
+                "security": [
+                    {
+                        "AccessToken": []
+                    },
+                    {
+                        "RefreshToken": []
+                    }
+                ],
+                "description": "更改购物车中指定的商品数量",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "更新购物项数量",
+                "parameters": [
+                    {
+                        "description": "购物项id（cart_item_id）、数量（quantity）",
+                        "name": "cart_item",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/common.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/response.UpdateCartItemQuantityResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "AccessToken": []
+                    },
+                    {
+                        "RefreshToken": []
+                    }
+                ],
+                "description": "将指定的商品和数量添加至购物车",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "添加购物项",
+                "parameters": [
+                    {
+                        "description": "商品id（product_id）、数量(quantity)",
+                        "name": "cart_item",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/common.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/response.AddCartItemResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/cart/item/{id}": {
+            "delete": {
+                "security": [
+                    {
+                        "AccessToken": []
+                    },
+                    {
+                        "RefreshToken": []
+                    }
+                ],
+                "description": "通过购物项id删除购物车中的商品",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "删除购物项",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "商品id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/common.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/response.DeleteCartItemResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/category": {
             "get": {
                 "description": "获取所有的商品分类",
@@ -1014,13 +1247,21 @@ const docTemplate = `{
                 31,
                 32,
                 33,
-                34
+                34,
+                35,
+                36,
+                37,
+                38,
+                39
             ],
             "x-enum-comments": {
                 "ErrorAccountInvalid": "用户名或密码错误",
+                "ErrorAddCartItem": "添加购物项失败",
                 "ErrorAddFavorite": "收藏商品失败",
+                "ErrorClearCart": "清空购物车失败",
                 "ErrorContextValue": "上下文值传递错误",
                 "ErrorCreateUser": "创建用户错误",
+                "ErrorDeleteCartItem": "删除购物项失败",
                 "ErrorDeleteFavorite": "取消收藏失败",
                 "ErrorEmailLinkExpire": "邮件确认链接已过期",
                 "ErrorEncryptMoney": "金额加密错误",
@@ -1029,6 +1270,7 @@ const docTemplate = `{
                 "ErrorFileType": "文件类型错误",
                 "ErrorFollowUser": "关注用户失败",
                 "ErrorGenerateToken": "token生成错误",
+                "ErrorGetCart": "获取购物车失败",
                 "ErrorGetCategoryList": "获取商品分类失败",
                 "ErrorGetFavoriteList": "获取收藏列表失败",
                 "ErrorGetFollowerList": "获取粉丝列表失败",
@@ -1044,6 +1286,7 @@ const docTemplate = `{
                 "ErrorSendEmail": "发送邮件错误",
                 "ErrorSendEmailTooFrequent": "邮件发送操作频繁",
                 "ErrorUnfollowUser": "取消关注失败",
+                "ErrorUpdateCartItemQuantity": "更新购物项数量失败",
                 "ErrorUpdateEmail": "更新邮箱错误",
                 "ErrorUpdateUser": "更新用户失败",
                 "ErrorUploadAvatar": "头像上传错误",
@@ -1088,8 +1331,21 @@ const docTemplate = `{
                 "ErrorSearchProduct",
                 "ErrorGetFavoriteList",
                 "ErrorAddFavorite",
-                "ErrorDeleteFavorite"
+                "ErrorDeleteFavorite",
+                "ErrorGetCart",
+                "ErrorAddCartItem",
+                "ErrorDeleteCartItem",
+                "ErrorClearCart",
+                "ErrorUpdateCartItemQuantity"
             ]
+        },
+        "response.AddCartItemResp": {
+            "type": "object",
+            "properties": {
+                "cart_item_id": {
+                    "type": "integer"
+                }
+            }
         },
         "response.AddFavoriteResp": {
             "type": "object"
@@ -1117,6 +1373,26 @@ const docTemplate = `{
         "response.BindEmailResp": {
             "type": "object"
         },
+        "response.CartItem": {
+            "type": "object",
+            "properties": {
+                "image_url": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "product_id": {
+                    "type": "integer"
+                },
+                "quantity": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
         "response.Category": {
             "type": "object",
             "properties": {
@@ -1128,6 +1404,12 @@ const docTemplate = `{
                 }
             }
         },
+        "response.ClearCartResp": {
+            "type": "object"
+        },
+        "response.DeleteCartItemResp": {
+            "type": "object"
+        },
         "response.DeleteFavoriteResp": {
             "type": "object"
         },
@@ -1135,6 +1417,7 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "id": {
+                    "description": "商品id",
                     "type": "integer"
                 },
                 "image_url": {
@@ -1156,6 +1439,17 @@ const docTemplate = `{
                 },
                 "nickname": {
                     "type": "string"
+                }
+            }
+        },
+        "response.GetCartListResp": {
+            "type": "object",
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.CartItem"
+                    }
                 }
             }
         },
@@ -1268,6 +1562,9 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        },
+        "response.UpdateCartItemQuantityResp": {
+            "type": "object"
         },
         "response.UploadAvatarResp": {
             "type": "object"
