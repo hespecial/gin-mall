@@ -1,6 +1,7 @@
 package response
 
 type CartItem struct {
+	ID        uint    `json:"id"`
 	ProductID uint    `json:"product_id"`
 	Title     string  `json:"title"`
 	Price     float64 `json:"price"`

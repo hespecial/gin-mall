@@ -24,7 +24,7 @@ func getCart(userID uint) (cart *model.Cart, _ error) {
 	return cart, global.DB.Where("user_id = ?", userID).First(&cart).Error
 }
 
-func GertCartList(userID uint) (cart *model.Cart, err error) {
+func GetCartList(userID uint) (cart *model.Cart, err error) {
 	if cartNotExist(userID) {
 		cart, err = createCart(userID)
 	} else {

@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-// 检查文件的 MIME 类型是否被允许
+// IsAllowedFileType 检查文件的 MIME 类型是否被允许
 func IsAllowedFileType(fileHeader *multipart.FileHeader, allowedTypes []string) bool {
 	file, err := fileHeader.Open()
 	if err != nil {

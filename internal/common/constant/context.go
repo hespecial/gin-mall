@@ -18,4 +18,7 @@ const (
 	EmailTokenKey     = "token"
 	EmailLimiterR     = time.Hour
 	EmailLimiterB     = 3
+
+	CartKey       = "cart"
+	CartKeyExpire = time.Hour * 24
 )

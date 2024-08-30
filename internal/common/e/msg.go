@@ -53,6 +53,8 @@ var msg = map[Code]string{
 	ErrorDeleteCartItem:         "删除购物项失败",
 	ErrorClearCart:              "清空购物车失败",
 	ErrorUpdateCartItemQuantity: "更新购物项数量失败",
+	ErrorCacheCartItems:         "缓存购物项失败",
+	ErrorDeleteCartCache:        "删除购物车缓存失败",
 }
 
 func (c Code) Msg() string {

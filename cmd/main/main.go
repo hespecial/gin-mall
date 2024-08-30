@@ -11,6 +11,7 @@ import (
 func init() {
 	global.Config = initialize.LoadConfig()
 	global.DB = initialize.InitMySQL()
+	global.Redis = initialize.InitRedis()
 	global.EsClient = initialize.InitEs()
 	global.Log = initialize.InitLogger()
 
@@ -26,7 +27,7 @@ func init() {
 //	@termsOfService	http://swagger.io/terms/
 
 //	@contact.name	API Support
-//	@contact.url	http://www.swagger.io/support
+//	@contact.url	https://github.com/hespecial
 //	@contact.email	1478488313@qq.com
 
 //	@license.name	Apache 2.0
