@@ -23,6 +23,7 @@ type User struct {
 	Relations []User    `gorm:"many2many:relation;"`
 	Favorites []Product `gorm:"many2many:favorite;"`
 	Cart      Cart      `gorm:"foreignKey:UserID"`
+	Address   []Address `gorm:"foreignKey:UserID"`
 }
 
 func (u *User) GetUserID() uint {

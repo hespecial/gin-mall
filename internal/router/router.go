@@ -93,6 +93,16 @@ func newRouter() *gin.Engine {
 				cart.DELETE("/item/:id", api.DeleteCartItem)
 				cart.DELETE("", api.ClearCart)
 			}
+
+			// 地址操作
+			address := authed.Group("/address")
+			{
+				address.GET("", api.GetAddressList)
+				address.GET("/:id", api.GetAddressInfo)
+				address.POST("", api.AddAddress)
+				address.PUT("/:id", api.UpdateAddress)
+				address.DELETE("/:id", api.DeleteAddress)
+			}
 		}
 	}
 

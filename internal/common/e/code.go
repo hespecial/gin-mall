@@ -52,4 +52,10 @@ const (
 	ErrorUpdateCartItemQuantity // 更新购物项数量失败
 	ErrorCacheCartItems         // 缓存购物项失败
 	ErrorDeleteCartCache        // 删除购物车缓存失败
+
+	ErrorGetAddressList // 获取用户地址列表失败
+	ErrorGetAddressInfo // 获取地址信息失败
+	ErrorAddAddress     // 添加用户地址失败
+	ErrorUpdateAddress  // 更新用户地址失败
+	ErrorDeleteAddress  // 删除用户地址失败
 )

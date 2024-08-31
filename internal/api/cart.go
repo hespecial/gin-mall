@@ -68,7 +68,7 @@ func AddCartItem(c *gin.Context) {
 //	@Security		RefreshToken
 //	@Accept			json
 //	@Produce		json
-//	@Param			cart_item			body		string	true	"购物项id（id）、数量（quantity）"
+//	@Param			cart_item	body		string	true	"购物项id（id）、数量（quantity）"
 //	@Success		200			{object}	common.Response{data=response.UpdateCartItemQuantityResp}
 //	@Router			/cart/item [put]
 func UpdateCartItemQuantity(c *gin.Context) {

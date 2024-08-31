@@ -12,7 +12,7 @@ const docTemplate = `{
         "termsOfService": "http://swagger.io/terms/",
         "contact": {
             "name": "API Support",
-            "url": "http://www.swagger.io/support",
+            "url": "https://github.com/hespecial",
             "email": "1478488313@qq.com"
         },
         "license": {
@@ -24,6 +24,277 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/address": {
+            "get": {
+                "security": [
+                    {
+                        "AccessToken": []
+                    },
+                    {
+                        "RefreshToken": []
+                    }
+                ],
+                "description": "获取用户的所有地址信息",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Address"
+                ],
+                "summary": "获取用户地址列表",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/common.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/response.GetAddressListResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "AccessToken": []
+                    },
+                    {
+                        "RefreshToken": []
+                    }
+                ],
+                "description": "创建一个新的用户地址，地址信息包括姓名、电话、地址",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Address"
+                ],
+                "summary": "添加用户地址",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "姓名",
+                        "name": "name",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "电话",
+                        "name": "phone",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "地址",
+                        "name": "address",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/common.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/response.AddAddressResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/address/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "AccessToken": []
+                    },
+                    {
+                        "RefreshToken": []
+                    }
+                ],
+                "description": "通过地址id获取地址信息",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Address"
+                ],
+                "summary": "获取地址信息",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "地址id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/common.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/response.GetAddressInfoResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "AccessToken": []
+                    },
+                    {
+                        "RefreshToken": []
+                    }
+                ],
+                "description": "通过指定地址id更新用户地址，可更新信息包括姓名、电话、地址",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Address"
+                ],
+                "summary": "更新用户地址",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "地址id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "姓名",
+                        "name": "name",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "电话",
+                        "name": "phone",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "地址",
+                        "name": "address",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/common.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/response.UpdateAddressResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "AccessToken": []
+                    },
+                    {
+                        "RefreshToken": []
+                    }
+                ],
+                "description": "通过地址id删除指定的地址",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Address"
+                ],
+                "summary": "删除用户地址",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "地址id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/common.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/response.DeleteAddressResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/auth/login": {
             "post": {
                 "description": "输入` + "`" + `用户名-密码` + "`" + `以登录",
@@ -234,7 +505,7 @@ const docTemplate = `{
                 "summary": "更新购物项数量",
                 "parameters": [
                     {
-                        "description": "购物项id（cart_item_id）、数量（quantity）",
+                        "description": "购物项id（id）、数量（quantity）",
                         "name": "cart_item",
                         "in": "body",
                         "required": true,
@@ -338,7 +609,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "商品id",
+                        "description": "购物项id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -1252,15 +1523,26 @@ const docTemplate = `{
                 36,
                 37,
                 38,
-                39
+                39,
+                40,
+                41,
+                42,
+                43,
+                44,
+                45,
+                46
             ],
             "x-enum-comments": {
                 "ErrorAccountInvalid": "用户名或密码错误",
+                "ErrorAddAddress": "添加用户地址失败",
                 "ErrorAddCartItem": "添加购物项失败",
                 "ErrorAddFavorite": "收藏商品失败",
+                "ErrorCacheCartItems": "缓存购物项失败",
                 "ErrorClearCart": "清空购物车失败",
                 "ErrorContextValue": "上下文值传递错误",
                 "ErrorCreateUser": "创建用户错误",
+                "ErrorDeleteAddress": "删除用户地址失败",
+                "ErrorDeleteCartCache": "删除购物车缓存失败",
                 "ErrorDeleteCartItem": "删除购物项失败",
                 "ErrorDeleteFavorite": "取消收藏失败",
                 "ErrorEmailLinkExpire": "邮件确认链接已过期",
@@ -1270,6 +1552,8 @@ const docTemplate = `{
                 "ErrorFileType": "文件类型错误",
                 "ErrorFollowUser": "关注用户失败",
                 "ErrorGenerateToken": "token生成错误",
+                "ErrorGetAddressInfo": "获取地址信息失败",
+                "ErrorGetAddressList": "获取用户地址列表失败",
                 "ErrorGetCart": "获取购物车失败",
                 "ErrorGetCategoryList": "获取商品分类失败",
                 "ErrorGetFavoriteList": "获取收藏列表失败",
@@ -1286,6 +1570,7 @@ const docTemplate = `{
                 "ErrorSendEmail": "发送邮件错误",
                 "ErrorSendEmailTooFrequent": "邮件发送操作频繁",
                 "ErrorUnfollowUser": "取消关注失败",
+                "ErrorUpdateAddress": "更新用户地址失败",
                 "ErrorUpdateCartItemQuantity": "更新购物项数量失败",
                 "ErrorUpdateEmail": "更新邮箱错误",
                 "ErrorUpdateUser": "更新用户失败",
@@ -1336,8 +1621,23 @@ const docTemplate = `{
                 "ErrorAddCartItem",
                 "ErrorDeleteCartItem",
                 "ErrorClearCart",
-                "ErrorUpdateCartItemQuantity"
+                "ErrorUpdateCartItemQuantity",
+                "ErrorCacheCartItems",
+                "ErrorDeleteCartCache",
+                "ErrorGetAddressList",
+                "ErrorGetAddressInfo",
+                "ErrorAddAddress",
+                "ErrorUpdateAddress",
+                "ErrorDeleteAddress"
             ]
+        },
+        "response.AddAddressResp": {
+            "type": "object",
+            "properties": {
+                "address_id": {
+                    "type": "integer"
+                }
+            }
         },
         "response.AddCartItemResp": {
             "type": "object",
@@ -1349,6 +1649,23 @@ const docTemplate = `{
         },
         "response.AddFavoriteResp": {
             "type": "object"
+        },
+        "response.Address": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                }
+            }
         },
         "response.AuthLoginResp": {
             "type": "object",
@@ -1376,6 +1693,9 @@ const docTemplate = `{
         "response.CartItem": {
             "type": "object",
             "properties": {
+                "id": {
+                    "type": "integer"
+                },
                 "image_url": {
                     "type": "string"
                 },
@@ -1405,6 +1725,9 @@ const docTemplate = `{
             }
         },
         "response.ClearCartResp": {
+            "type": "object"
+        },
+        "response.DeleteAddressResp": {
             "type": "object"
         },
         "response.DeleteCartItemResp": {
@@ -1439,6 +1762,25 @@ const docTemplate = `{
                 },
                 "nickname": {
                     "type": "string"
+                }
+            }
+        },
+        "response.GetAddressInfoResp": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "$ref": "#/definitions/response.Address"
+                }
+            }
+        },
+        "response.GetAddressListResp": {
+            "type": "object",
+            "properties": {
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.Address"
+                    }
                 }
             }
         },
@@ -1562,6 +1904,9 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        },
+        "response.UpdateAddressResp": {
+            "type": "object"
         },
         "response.UpdateCartItemQuantityResp": {
             "type": "object"

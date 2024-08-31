@@ -50,14 +50,25 @@ definitions:
     - 37
     - 38
     - 39
+    - 40
+    - 41
+    - 42
+    - 43
+    - 44
+    - 45
+    - 46
     type: integer
     x-enum-comments:
       ErrorAccountInvalid: 用户名或密码错误
+      ErrorAddAddress: 添加用户地址失败
       ErrorAddCartItem: 添加购物项失败
       ErrorAddFavorite: 收藏商品失败
+      ErrorCacheCartItems: 缓存购物项失败
       ErrorClearCart: 清空购物车失败
       ErrorContextValue: 上下文值传递错误
       ErrorCreateUser: 创建用户错误
+      ErrorDeleteAddress: 删除用户地址失败
+      ErrorDeleteCartCache: 删除购物车缓存失败
       ErrorDeleteCartItem: 删除购物项失败
       ErrorDeleteFavorite: 取消收藏失败
       ErrorEmailLinkExpire: 邮件确认链接已过期
@@ -67,6 +78,8 @@ definitions:
       ErrorFileType: 文件类型错误
       ErrorFollowUser: 关注用户失败
       ErrorGenerateToken: token生成错误
+      ErrorGetAddressInfo: 获取地址信息失败
+      ErrorGetAddressList: 获取用户地址列表失败
       ErrorGetCart: 获取购物车失败
       ErrorGetCategoryList: 获取商品分类失败
       ErrorGetFavoriteList: 获取收藏列表失败
@@ -83,6 +96,7 @@ definitions:
       ErrorSendEmail: 发送邮件错误
       ErrorSendEmailTooFrequent: 邮件发送操作频繁
       ErrorUnfollowUser: 取消关注失败
+      ErrorUpdateAddress: 更新用户地址失败
       ErrorUpdateCartItemQuantity: 更新购物项数量失败
       ErrorUpdateEmail: 更新邮箱错误
       ErrorUpdateUser: 更新用户失败
@@ -133,12 +147,35 @@ definitions:
     - ErrorDeleteCartItem
     - ErrorClearCart
     - ErrorUpdateCartItemQuantity
+    - ErrorCacheCartItems
+    - ErrorDeleteCartCache
+    - ErrorGetAddressList
+    - ErrorGetAddressInfo
+    - ErrorAddAddress
+    - ErrorUpdateAddress
+    - ErrorDeleteAddress
+  response.AddAddressResp:
+    properties:
+      address_id:
+        type: integer
+    type: object
   response.AddCartItemResp:
     properties:
       cart_item_id:
         type: integer
     type: object
   response.AddFavoriteResp:
+    type: object
+  response.Address:
+    properties:
+      address:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      phone:
+        type: string
     type: object
   response.AuthLoginResp:
     properties:
@@ -157,6 +194,8 @@ definitions:
     type: object
   response.CartItem:
     properties:
+      id:
+        type: integer
       image_url:
         type: string
       price:
@@ -176,6 +215,8 @@ definitions:
         type: string
     type: object
   response.ClearCartResp:
+    type: object
+  response.DeleteAddressResp:
     type: object
   response.DeleteCartItemResp:
     type: object
@@ -199,6 +240,18 @@ definitions:
         type: string
       nickname:
         type: string
+    type: object
+  response.GetAddressInfoResp:
+    properties:
+      address:
+        $ref: '#/definitions/response.Address'
+    type: object
+  response.GetAddressListResp:
+    properties:
+      list:
+        items:
+          $ref: '#/definitions/response.Address'
+        type: array
     type: object
   response.GetCartListResp:
     properties:
@@ -280,6 +333,8 @@ definitions:
       username:
         type: string
     type: object
+  response.UpdateAddressResp:
+    type: object
   response.UpdateCartItemQuantityResp:
     type: object
   response.UploadAvatarResp:
@@ -316,7 +371,7 @@ info:
   contact:
     email: 1478488313@qq.com
     name: API Support
-    url: http://www.swagger.io/support
+    url: https://github.com/hespecial
   description: gin-mall API Documentation
   license:
     name: Apache 2.0
@@ -325,6 +380,161 @@ info:
   title: gin-mall
   version: "1.0"
 paths:
+  /address:
+    get:
+      description: 获取用户的所有地址信息
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.GetAddressListResp'
+              type: object
+      security:
+      - AccessToken: []
+      - RefreshToken: []
+      summary: 获取用户地址列表
+      tags:
+      - Address
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: 创建一个新的用户地址，地址信息包括姓名、电话、地址
+      parameters:
+      - description: 姓名
+        in: formData
+        name: name
+        required: true
+        type: string
+      - description: 电话
+        in: formData
+        name: phone
+        required: true
+        type: string
+      - description: 地址
+        in: formData
+        name: address
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.AddAddressResp'
+              type: object
+      security:
+      - AccessToken: []
+      - RefreshToken: []
+      summary: 添加用户地址
+      tags:
+      - Address
+  /address/{id}:
+    delete:
+      description: 通过地址id删除指定的地址
+      parameters:
+      - description: 地址id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.DeleteAddressResp'
+              type: object
+      security:
+      - AccessToken: []
+      - RefreshToken: []
+      summary: 删除用户地址
+      tags:
+      - Address
+    get:
+      description: 通过地址id获取地址信息
+      parameters:
+      - description: 地址id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.GetAddressInfoResp'
+              type: object
+      security:
+      - AccessToken: []
+      - RefreshToken: []
+      summary: 获取地址信息
+      tags:
+      - Address
+    put:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: 通过指定地址id更新用户地址，可更新信息包括姓名、电话、地址
+      parameters:
+      - description: 地址id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 姓名
+        in: formData
+        name: name
+        required: true
+        type: string
+      - description: 电话
+        in: formData
+        name: phone
+        required: true
+        type: string
+      - description: 地址
+        in: formData
+        name: address
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.UpdateAddressResp'
+              type: object
+      security:
+      - AccessToken: []
+      - RefreshToken: []
+      summary: 更新用户地址
+      tags:
+      - Address
   /auth/login:
     post:
       consumes:
@@ -468,7 +678,7 @@ paths:
       - application/json
       description: 更改购物车中指定的商品数量
       parameters:
-      - description: 购物项id（cart_item_id）、数量（quantity）
+      - description: 购物项id（id）、数量（quantity）
         in: body
         name: cart_item
         required: true
@@ -496,7 +706,7 @@ paths:
     delete:
       description: 通过购物项id删除购物车中的商品
       parameters:
-      - description: 商品id
+      - description: 购物项id
         in: path
         name: id
         required: true
