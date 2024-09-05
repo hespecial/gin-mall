@@ -21,4 +21,8 @@ const (
 
 	CartKey       = "cart"
 	CartKeyExpire = time.Hour * 24
+
+	OrderDueTime    = time.Minute * 30
+	KafkaBrokers    = "localhost:9092"
+	KafkaOrderTopic = "topic-order"
 )

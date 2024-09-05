@@ -29,6 +29,10 @@ func GetProductById(id uint) (product *model.Product, _ error) {
 		First(&product, id).Error
 }
 
+func GetProductsByIDs(ids []uint) (products []*model.Product, err error) {
+	return products, global.DB.Where("id IN (?)", ids).Find(&products).Error
+}
+
 func SearchProduct(keyword string, page int, size int) (products []*model.Product, count int64, _ error) {
 	return products, count, global.DB.Transaction(
 		func(tx *gorm.DB) error {

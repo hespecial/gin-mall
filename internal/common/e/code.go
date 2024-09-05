@@ -58,4 +58,10 @@ const (
 	ErrorAddAddress     // 添加用户地址失败
 	ErrorUpdateAddress  // 更新用户地址失败
 	ErrorDeleteAddress  // 删除用户地址失败
+
+	ErrorGetOrderList         // 获取订单列表失败
+	ErrorGetOrderInfo         // 获取订单详情失败
+	ErrorCreateOrder          // 创建订单失败
+	ErrorCalculateTotalAmount // 计算总金额失败
+	ErrorDeleteOrder          // 删除订单失败
 )

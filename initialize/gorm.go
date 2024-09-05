@@ -89,7 +89,7 @@ func migrate(db *gorm.DB) error {
 		&model.Product{}, &model.ProductImage{},
 		&model.Cart{}, &model.CartItem{},
 		&model.Address{},
-		// &model.Order{},
+		&model.Order{}, &model.OrderItem{},
 		// &model.Notice{},
 		// &model.SkillProduct{},
 		// &model.SkillProduct2MQ{},

@@ -24,6 +24,7 @@ type User struct {
 	Favorites []Product `gorm:"many2many:favorite;"`
 	Cart      Cart      `gorm:"foreignKey:UserID"`
 	Address   []Address `gorm:"foreignKey:UserID"`
+	Orders    []Order   `gorm:"foreignKey:UserID"`
 }
 
 func (u *User) GetUserID() uint {

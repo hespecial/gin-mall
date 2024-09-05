@@ -103,6 +103,15 @@ func newRouter() *gin.Engine {
 				address.PUT("/:id", api.UpdateAddress)
 				address.DELETE("/:id", api.DeleteAddress)
 			}
+
+			// 订单操作
+			order := authed.Group("/order")
+			{
+				order.GET("", api.GetOrderList)
+				order.GET("/:id", api.GetOrderInfo)
+				order.POST("", api.CreateOrder)
+				order.DELETE("/:id", api.DeleteOrder)
+			}
 		}
 	}
 
